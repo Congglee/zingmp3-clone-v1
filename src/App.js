@@ -1,23 +1,32 @@
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
-  const [work, setWork] = useState("");
+  // useSelector(selector: Function, equalityFn?: Function): Một hook để truy cập state của Redux store. Hook này lấy một hàm selector làm đối số. Selector được gọi với state store.
+
+  // Hook này lấy hàm so sánh đẳng thức tùy chọn làm tham số thứ hai cho phép bạn tùy chỉnh cách so sánh state đã chọn để xác định xem component có cần được re-render hay không.
+  const { test, homeData } = useSelector((state) => state.app);
+  console.log(test, homeData);
 
   return (
-    <div className="flex gap-8 h-screen justify-center border border-red-500 items-center">
-      <input
-        type="text"
-        className="outline-none border border-blue-600 px-4 py-2 w-[400px]"
-        value={work}
-        onChange={(e) => console.log(e.target.value)}
+    <>
+      <div className="">App</div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
       />
-      <button
-        type="button"
-        className="outline-none px-4 py-2 bg-blue-500 rounded-md text-white"
-      >
-        Add
-      </button>
-    </div>
+      <ToastContainer />
+    </>
   );
 }
 
