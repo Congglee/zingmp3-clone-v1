@@ -1,6 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 content.md
+explain.md
 .env
 /api-zingmp3-public
 # dependencies
