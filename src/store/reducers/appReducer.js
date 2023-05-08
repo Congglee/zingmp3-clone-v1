@@ -1,20 +1,26 @@
 import actionTypes from "../actions/actionTypes";
 
+// State ban đầu của app
 const initState = {
-  homeData: [],
-  test: "Hello World",
+  banner: [],
 };
 
 // Định nghĩa một hàm reducer được gọi là appReducer.
 // Reducer có hai tham số: state và action.
-// State ban đầu của reducer được định nghĩa là một đối tượng có hai thuộc tính: homeData và test.
+// Hàm reducer lấy state hiện tại và một action làm đối số của nó
 // Reducer cũng import đối tượng actionTypes từ tệp actionTypes.js.
-// Hàm reducer sử dụng câu lệnh switch để kiểm tra type hành action và trong trường hợp này, khi type action là GET_HOME, nó chỉ trả về state hiện tại.
 
 const appReducer = (state = initState, action) => {
   switch (action.type) {
     case actionTypes.GET_HOME:
-      return state;
+      // Khi action Types.GET_HOME được dispatched, reducer sẽ cập nhật state bằng spread operator object state và cập nhật thuộc tính banner với homeData đã được chuyển vào trình tạo action
+      console.log(action);
+      return {
+        ...state,
+        banner:
+          action.homeData?.find((item) => item.sectionType === "banner")
+            ?.items || null,
+      };
 
     default:
       return state;
