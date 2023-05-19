@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getArrSlider } from "../ultis/fn";
 import * as actions from "../store/actions";
+import { useNavigate } from "react-router-dom";
 
 const Slider = () => {
   // useSelector(selector: Function, equalityFn?: Function): Một hook để truy cập state của Redux store. Hook này lấy một hàm selector làm đối số. Selector được gọi với state store.
@@ -10,8 +11,10 @@ const Slider = () => {
   // useSelector((state) => {
   //   console.log(state.app);
   // });
+
   const { banner } = useSelector((state) => state.app);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const sliderEls = document.getElementsByClassName("slider-item");
@@ -83,6 +86,10 @@ const Slider = () => {
   const handleClickBanner = (item) => {
     if (item?.type === 1) {
       dispatch(actions.setCurSongId(item.encodeId));
+      dispatch(actions.play(true));
+    } else if (item?.type === 4) {
+      const albumPath = item?.link?.split(".")[0];
+      navigate(albumPath);
     }
   };
 
