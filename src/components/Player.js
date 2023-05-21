@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import * as apis from "../apis";
 import icons from "../ultis/icons";
+import * as actions from "../store/actions";
 
 const {
   AiFillHeart,
@@ -17,12 +18,14 @@ const {
 
 const Player = () => {
   // Đối tượng Audio trong JS
-  const audioEl = new Audio();
+  // Lưu trữ một tham chiếu tối đối tượng Audio bằng useRef trong biến audioEl
+  const audioEl = useRef(new Audio());
   // console.log(audioEl); // <audio preload="auto"></audio>
 
   const { curSongId, isPlaying } = useSelector((state) => state.music);
   const [songInfo, setSongInfo] = useState(null);
   const [source, setSource] = useState(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchDetailSong = async () => {
@@ -46,11 +49,41 @@ const Player = () => {
     fetchDetailSong();
   }, [curSongId]);
 
+  // console.log(source);
+  // Theo dõi sự thay đổi của curSongId và source
+  // Khi một trong hai giá trị này thay đổi, useEffect sẽ cập nhật lại src của đối tượng Audio lưu trữ trong audioEl.current
   useEffect(() => {
-    // audioEl.play();
-  }, [curSongId]);
+    // Dừng audio
+    audioEl.current.pause();
 
-  const handleTogglePlayMusic = () => {};
+    // Set lại source cho audio
+    audioEl.current.src = source;
+
+    // Load source mới cho audio vừa set
+    audioEl.current.load();
+
+    // Nếu isPlaying là true chạy audio hiện tại đang lưu trữ
+    if (isPlaying) audioEl.current.play();
+  }, [curSongId, source]);
+
+  const handleTogglePlayMusic = () => {
+    // Nếu audio bài hát là true (đang phát) mà người dùng click vào
+    if (isPlaying) {
+      // Dừng audio lại
+      audioEl.current.pause();
+
+      // Đổi icon toggle play music
+      dispatch(actions.play(false));
+    } else {
+      // Nếu audio bài hát là false (đang dừng) mà người dùng click vào
+
+      // Chạy audio bài hát
+      audioEl.current.play();
+
+      // Đổi icon toggle play music
+      dispatch(actions.play(true));
+    }
+  };
 
   return (
     <div className="bg-main-400 px-5 h-full flex">

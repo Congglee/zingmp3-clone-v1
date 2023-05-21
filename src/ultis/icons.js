@@ -22,6 +22,7 @@ import {
   BsFillPlayFill,
   BsPauseFill,
   BsMusicNoteBeamed,
+  BsDot,
 } from "react-icons/bs";
 import { CiRepeat, CiShuffle } from "react-icons/ci";
 
@@ -45,6 +46,7 @@ const icons = {
   BsFillPlayFill,
   BsPauseFill,
   BsMusicNoteBeamed,
+  BsDot,
 };
 
 export default icons;
