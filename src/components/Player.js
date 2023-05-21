@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as apis from "../apis";
 import icons from "../ultis/icons";
 import * as actions from "../store/actions";
+import moment from "moment";
 
 const {
   AiFillHeart,
@@ -16,17 +17,18 @@ const {
   CiShuffle,
 } = icons;
 
+var intervalId;
 const Player = () => {
-  // Đối tượng Audio trong JS
-  // Lưu trữ một tham chiếu tối đối tượng Audio bằng useRef trong biến audioEl
-  const audioEl = useRef(new Audio());
-  // console.log(audioEl); // <audio preload="auto"></audio>
-
   const { curSongId, isPlaying } = useSelector((state) => state.music);
   const [songInfo, setSongInfo] = useState(null);
-  const [source, setSource] = useState(null);
+  const [audio, setAudio] = useState(new Audio()); // Lưu trữ source để phát nhạc
+  const [curSecond, setCurSecond] = useState(0);
   const dispatch = useDispatch();
 
+  // Lưu trữ một tham chiếu tới một đối tượng DOM bằng useRef hook
+  const thumbRef = useRef(); // thumbRef === <div ref={thumbRef} className="absolute top-0 left-0 h-[3px] rounded-l-full rounded-r-full bg-[#0e8080]"></div>
+
+  // useEffect được thực thị khi curSongId thay đổi (gọi api để lấy ra thông tin bài hát và source của bài hát đó)
   useEffect(() => {
     const fetchDetailSong = async () => {
       const [res1, res2] = await Promise.all([
@@ -41,36 +43,52 @@ const Player = () => {
 
       // res2: link, file nhạc của bài hát
       if (res2.data.err === 0) {
-        // Đặt cho source có giá trị của key 128 (link nhạc) trong data
-        setSource(res2.data.data["128"]);
+        // Dừng audio đang phát
+        audio.pause();
+
+        // set cho audio hiện tại bằng source trong res2.data.data["128"]
+        // do api cung cấp trả về là đối tượng có key là 128 nên sẽ phải sử dụng bracket notation để truy cập
+        setAudio(new Audio(res2.data.data["128"]));
       }
     };
 
     fetchDetailSong();
   }, [curSongId]);
 
-  // console.log(source);
-  // Theo dõi sự thay đổi của curSongId và source
-  // Khi một trong hai giá trị này thay đổi, useEffect sẽ cập nhật lại src của đối tượng Audio lưu trữ trong audioEl.current
+  // useEffect được thực thi khi isPlaying bị thay đổi (dùng cho việc làm cho thanh progress bar thumbRef và số giây chạy theo thời lượng bài hát đang phát)
   useEffect(() => {
-    // Dừng audio
-    audioEl.current.pause();
+    // Nếu isPlaying là true (nhạc đang được phát)
+    if (isPlaying) {
+      // gán intervalId bằng setInterval cho chạy một lần mỗi 0.2s
+      intervalId = setInterval(() => {
+        // Mỗi lần chạy thì tính số phần trăm percent để lấy ra giá trị của thuộc tính right trong CSS làm cho thanh progress bar thumbRef chạy
+        let percent =
+          Math.round((audio.currentTime * 10000) / songInfo.duration) / 100;
+        thumbRef.current.style.cssText = `right: ${100 - percent}%`;
 
-    // Set lại source cho audio
-    audioEl.current.src = source;
+        // Đặt lại thời gian hiện tại bằng audio.currentTime
+        setCurSecond(Math.round(audio.currentTime));
+      }, 200);
+    } else {
+      intervalId && clearInterval(intervalId);
+    }
+    // console.log(intervalId);
+  }, [isPlaying]);
 
-    // Load source mới cho audio vừa set
-    audioEl.current.load();
+  // useEffect được thực thi khi audio bị thay đổi (dùng cho việc load source audio để phát nhạc mỗi khi audio bị thay đổi)
+  useEffect(() => {
+    // Load source audio
+    audio.load();
 
-    // Nếu isPlaying là true chạy audio hiện tại đang lưu trữ
-    if (isPlaying) audioEl.current.play();
-  }, [curSongId, source]);
+    // Nếu isPlaying là true chạy audio hiện tại
+    if (isPlaying) audio.play();
+  }, [audio]);
 
   const handleTogglePlayMusic = () => {
     // Nếu audio bài hát là true (đang phát) mà người dùng click vào
     if (isPlaying) {
       // Dừng audio lại
-      audioEl.current.pause();
+      audio.pause();
 
       // Đổi icon toggle play music
       dispatch(actions.play(false));
@@ -78,7 +96,7 @@ const Player = () => {
       // Nếu audio bài hát là false (đang dừng) mà người dùng click vào
 
       // Chạy audio bài hát
-      audioEl.current.play();
+      audio.play();
 
       // Đổi icon toggle play music
       dispatch(actions.play(true));
@@ -139,7 +157,16 @@ const Player = () => {
           </span>
         </div>
 
-        <div>progress bar</div>
+        <div className="w-full flex items-center justify-center gap-3 text-xs">
+          <span>{moment.utc(curSecond * 1000).format("mm:ss")}</span>
+          <div className="w-3/5 h-[3px] rounded-l-full rounded-r-full relative bg-[rgba(0,0,0,0.1)]">
+            <div
+              ref={thumbRef}
+              className="absolute top-0 left-0 h-[3px] rounded-l-full rounded-r-full bg-[#0e8080]"
+            ></div>
+          </div>
+          <span>{moment.utc(songInfo?.duration * 1000).format("mm:ss")}</span>
+        </div>
       </div>
 
       <div className="w-[30%] flex-auto border border-red-500">Volume</div>
