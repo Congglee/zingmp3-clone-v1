@@ -4,6 +4,7 @@ import * as apis from "../apis";
 import icons from "../ultis/icons";
 import * as actions from "../store/actions";
 import moment from "moment";
+import { toast } from "react-toastify";
 
 const {
   AiFillHeart,
@@ -22,11 +23,12 @@ const Player = () => {
   const { curSongId, isPlaying } = useSelector((state) => state.music);
   const [songInfo, setSongInfo] = useState(null);
   const [audio, setAudio] = useState(new Audio()); // Lưu trữ source để phát nhạc
-  const [curSecond, setCurSecond] = useState(0);
+  const [curSeconds, setCurSeconds] = useState(0);
   const dispatch = useDispatch();
 
   // Lưu trữ một tham chiếu tới một đối tượng DOM bằng useRef hook
   const thumbRef = useRef(); // thumbRef === <div ref={thumbRef} className="absolute top-0 left-0 h-[3px] rounded-l-full rounded-r-full bg-[#0e8080]"></div>
+  const trackRef = useRef();
 
   // useEffect được thực thị khi curSongId thay đổi (gọi api để lấy ra thông tin bài hát và source của bài hát đó)
   useEffect(() => {
@@ -49,41 +51,49 @@ const Player = () => {
         // set cho audio hiện tại bằng source trong res2.data.data["128"]
         // do api cung cấp trả về là đối tượng có key là 128 nên sẽ phải sử dụng bracket notation để truy cập
         setAudio(new Audio(res2.data.data["128"]));
+      } else {
+        // Trường hợp link, source nhạc bị lỗi (cần tài khoản vip, pri, ...)
+        setAudio(new Audio()); // Đặt lại audio là rỗng
+        dispatch(actions.play(false)); // Đổi lại button play là false
+
+        toast.warn(res2.data.msg); // Hiển thị cảnh báo bằng thư viện toast
+        setCurSeconds(0); // Đặt thời gian progressbar về lại 0
+        thumbRef.current.style.cssText = `right: 100%`; // Set progressbar đang chạy về lại điểm ban đầu
       }
     };
 
     fetchDetailSong();
   }, [curSongId]);
 
-  // useEffect được thực thi khi isPlaying bị thay đổi (dùng cho việc làm cho thanh progress bar thumbRef và số giây chạy theo thời lượng bài hát đang phát)
+  // useEffect được thực thi khi audio bị thay đổi (dùng cho việc load source audio để phát nhạc mỗi khi audio bị thay đổi, làm cho thanh progress bar thumbRef và số giây chạy theo thời lượng bài hát đang phát)
   useEffect(() => {
-    // Nếu isPlaying là true (nhạc đang được phát)
+    // Nếu intervalId có tồn tại sau mỗi lần audio thay đổi thì sẽ xóa đi
+    intervalId && clearInterval(intervalId);
+
+    audio.pause();
+    // Load source audio
+    audio.load();
+
+    // Nếu isPlaying là true chạy audio hiện tại
     if (isPlaying) {
+      audio.play();
+
       // gán intervalId bằng setInterval cho chạy một lần mỗi 0.2s
       intervalId = setInterval(() => {
+        // console.log(audio.currentTime);
+
         // Mỗi lần chạy thì tính số phần trăm percent để lấy ra giá trị của thuộc tính right trong CSS làm cho thanh progress bar thumbRef chạy
         let percent =
           Math.round((audio.currentTime * 10000) / songInfo.duration) / 100;
         thumbRef.current.style.cssText = `right: ${100 - percent}%`;
 
         // Đặt lại thời gian hiện tại bằng audio.currentTime
-        setCurSecond(Math.round(audio.currentTime));
+        setCurSeconds(Math.round(audio.currentTime));
       }, 200);
-    } else {
-      intervalId && clearInterval(intervalId);
     }
-    // console.log(intervalId);
-  }, [isPlaying]);
-
-  // useEffect được thực thi khi audio bị thay đổi (dùng cho việc load source audio để phát nhạc mỗi khi audio bị thay đổi)
-  useEffect(() => {
-    // Load source audio
-    audio.load();
-
-    // Nếu isPlaying là true chạy audio hiện tại
-    if (isPlaying) audio.play();
   }, [audio]);
 
+  // Xử lý button play music
   const handleTogglePlayMusic = () => {
     // Nếu audio bài hát là true (đang phát) mà người dùng click vào
     if (isPlaying) {
@@ -101,6 +111,28 @@ const Player = () => {
       // Đổi icon toggle play music
       dispatch(actions.play(true));
     }
+  };
+
+  // Xử lý việc click vào thanh progress bar (tua bài hát)
+  const handleClickProgressbar = (e) => {
+    // console.log(e);
+    // console.log(trackRef);
+
+    const trackRect = trackRef.current.getBoundingClientRect(); // Lấy ra tọa độ của phần tử DOM mà trackRef tham chiếu tới
+
+    // Tính ra số phần trăm khi người dùng click progressbar
+    const percent =
+      Math.round(((e.clientX - trackRect.left) * 10000) / trackRect.width) /
+      100;
+
+    // Set lại thumbRef (progressbar màu xanh)
+    thumbRef.current.style.cssText = `right: ${100 - percent}%`;
+
+    // Set lại thời gian hiện tại của audio
+    audio.currentTime = (percent * songInfo.duration) / 100;
+
+    // Set lại thời gian của thanh progressbar
+    setCurSeconds(Math.round((percent * songInfo.duration) / 100));
   };
 
   return (
@@ -158,11 +190,15 @@ const Player = () => {
         </div>
 
         <div className="w-full flex items-center justify-center gap-3 text-xs">
-          <span>{moment.utc(curSecond * 1000).format("mm:ss")}</span>
-          <div className="w-3/5 h-[3px] rounded-l-full rounded-r-full relative bg-[rgba(0,0,0,0.1)]">
+          <span>{moment.utc(curSeconds * 1000).format("mm:ss")}</span>
+          <div
+            className="w-3/5 h-[3px] hover:h-[8px] rounded-l-full cursor-pointer rounded-r-full relative bg-[rgba(0,0,0,0.1)]"
+            onClick={handleClickProgressbar}
+            ref={trackRef}
+          >
             <div
               ref={thumbRef}
-              className="absolute top-0 left-0 h-[3px] rounded-l-full rounded-r-full bg-[#0e8080]"
+              className="absolute top-0 left-0 bottom-0 rounded-l-full rounded-r-full bg-[#0e8080]"
             ></div>
           </div>
           <span>{moment.utc(songInfo?.duration * 1000).format("mm:ss")}</span>
