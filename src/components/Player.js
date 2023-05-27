@@ -20,10 +20,11 @@ const {
 
 var intervalId;
 const Player = () => {
-  const { curSongId, isPlaying } = useSelector((state) => state.music);
+  const { curSongId, isPlaying, songs } = useSelector((state) => state.music);
   const [songInfo, setSongInfo] = useState(null);
   const [audio, setAudio] = useState(new Audio()); // Lưu trữ source để phát nhạc
   const [curSeconds, setCurSeconds] = useState(0);
+  const [isShuffle, setIsShuffle] = useState(false);
   const dispatch = useDispatch();
 
   // Lưu trữ một tham chiếu tới một đối tượng DOM bằng useRef hook
@@ -52,6 +53,8 @@ const Player = () => {
         // do api cung cấp trả về là đối tượng có key là 128 nên sẽ phải sử dụng bracket notation để truy cập
         setAudio(new Audio(res2.data.data["128"]));
       } else {
+        audio.pause();
+
         // Trường hợp link, source nhạc bị lỗi (cần tài khoản vip, pri, ...)
         setAudio(new Audio()); // Đặt lại audio là rỗng
         dispatch(actions.play(false)); // Đổi lại button play là false
@@ -135,6 +138,35 @@ const Player = () => {
     setCurSeconds(Math.round((percent * songInfo.duration) / 100));
   };
 
+  // Xử lý người dùng click vào button next song
+  const handleNextSong = () => {
+    // Nếu songs được lấy ra từ redux store tồn tại === true
+    if (songs) {
+      let currentSongIndex; // index của current song
+      songs?.forEach((item, index) => {
+        // Nếu encodeId của encodeId của các bài hát trong songs === với id của bài hát hiện tại => currentSongIndex = index
+        if (item.encodeId === curSongId) currentSongIndex = index;
+      });
+      // Gửi 1 actions đến redux reducer id của bài hát hiện tại có index + 1 (bài hát nằm kế tiếp bài hát hiện tại)
+      dispatch(actions.setCurSongId(songs[currentSongIndex + 1].encodeId));
+      dispatch(actions.play(true));
+    }
+  };
+
+  const handlePrevSong = () => {
+    if (songs) {
+      let currentSongIndex;
+      songs?.forEach((item, index) => {
+        if (item.encodeId === curSongId) currentSongIndex = index;
+      });
+      // Gửi 1 actions đến redux reducer id của bài hát hiện tại có index - 1 (bài hát nằm trước bài hát hiện tại)
+      dispatch(actions.setCurSongId(songs[currentSongIndex - 1].encodeId));
+      dispatch(actions.play(true));
+    }
+  };
+
+  const handleShuffle = () => {};
+
   return (
     <div className="bg-main-400 px-5 h-full flex">
       <div className="w-[30%] flex-auto flex gap-3 items-center">
@@ -165,10 +197,17 @@ const Player = () => {
 
       <div className="w-[40%] flex-auto border flex items-center justify-center gap-2 flex-col border-red-500 py-2">
         <div className="flex gap-8 justify-center items-center">
-          <span className="cursor-pointer" title="Bật phát ngẫu nhiên">
+          <span
+            className={`cursor-pointer ${isShuffle && "text-purple-600"}`}
+            title="Bật phát ngẫu nhiên"
+            onClick={() => setIsShuffle((prev) => !prev)}
+          >
             <CiShuffle size={24} />
           </span>
-          <span className="cursor-pointer">
+          <span
+            onClick={handlePrevSong}
+            className={`${!songs ? "text-gray-500" : "cursor-pointer"}`}
+          >
             <MdSkipPrevious size={24} />
           </span>
           <span
@@ -181,7 +220,10 @@ const Player = () => {
               <BsFillPlayFill size={30} />
             )}
           </span>
-          <span className="cursor-pointer">
+          <span
+            className={`${!songs ? "text-gray-500" : "cursor-pointer"}`}
+            onClick={handleNextSong}
+          >
             <MdSkipNext size={24} />
           </span>
           <span className="cursor-pointer" title="Bật phát lại tất cả">

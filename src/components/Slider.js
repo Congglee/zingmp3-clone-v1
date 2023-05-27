@@ -16,6 +16,7 @@ const Slider = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Handle slick-slider
   useEffect(() => {
     const sliderEls = document.getElementsByClassName("slider-item");
     let min = 0;
@@ -83,13 +84,23 @@ const Slider = () => {
     };
   }, []);
 
+  // Xử lý công việc người dùng click vào item banner
   const handleClickBanner = (item) => {
+    // Nếu banner có type === 1 (là 1 bài hát)
     if (item?.type === 1) {
+      // Gửi 1 actions đến redux reducer id của bài hát trong banner (phát bài hát)
       dispatch(actions.setCurSongId(item.encodeId));
+
+      // Gửi 1 actions đến redux reducer giá trị true set lại state trong store của play (thay đổi toggle player music)
       dispatch(actions.play(true));
+
+      // Gửi 1 actions đến redux reducer giá trị null cho playlist (cho reducer biết bài hát không nằm trong playlist nào để vô hiệu hóa button next & prev)
+      dispatch(actions.setPlaylist(null));
     } else if (item?.type === 4) {
       const albumPath = item?.link?.split(".")[0];
       navigate(albumPath);
+    } else {
+      dispatch(actions.setPlaylist(null));
     }
   };
 
