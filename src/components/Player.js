@@ -21,10 +21,11 @@ const {
 var intervalId;
 const Player = () => {
   const { curSongId, isPlaying, songs } = useSelector((state) => state.music);
-  const [songInfo, setSongInfo] = useState(null);
+  const [songInfo, setSongInfo] = useState(null); // Lưu thông tin bài hát
   const [audio, setAudio] = useState(new Audio()); // Lưu trữ source để phát nhạc
-  const [curSeconds, setCurSeconds] = useState(0);
+  const [curSeconds, setCurSeconds] = useState(0); // Lưu thời gian hiện tại của audio trong progressbar
   const [isShuffle, setIsShuffle] = useState(false);
+  const [isRepeat, setIsRepeat] = useState(false);
   const dispatch = useDispatch();
 
   // Lưu trữ một tham chiếu tới một đối tượng DOM bằng useRef hook
@@ -78,7 +79,7 @@ const Player = () => {
     audio.load();
 
     // Nếu isPlaying là true chạy audio hiện tại
-    if (isPlaying) {
+    if (isPlaying && thumbRef.current) {
       audio.play();
 
       // gán intervalId bằng setInterval cho chạy một lần mỗi 0.2s
@@ -95,6 +96,30 @@ const Player = () => {
       }, 200);
     }
   }, [audio]);
+
+  // useEffect được thực thi khi audio, isShuffle, isRepeat bị thay đổi (dùng cho việc phát nhạc khi người dùng click vào một trong hai button shuffle, repeat hoặc cả hai)
+  useEffect(() => {
+    const handleEnded = () => {
+      // Nếu isShuffle là true
+      if (isShuffle) {
+        handleShuffle();
+      } else if (isRepeat) {
+        // Nếu isRepeat là true
+        handleNextSong();
+      } else {
+        // Trường hợp người dùng không click vào button nào cả
+        audio.pause();
+        dispatch(actions.play(false));
+      }
+    };
+    // Thêm sự kiện ended cho audio, chỉ khi audio kết thúc mới thực thi hàm handleEnded
+    audio.addEventListener("ended", handleEnded);
+
+    // Loại bỏ sự kiện ended khi người dùng tắt hoặc out website
+    return () => {
+      audio.removeEventListener("ended", handleEnded);
+    };
+  }, [audio, isShuffle, isRepeat]);
 
   // Xử lý button play music
   const handleTogglePlayMusic = () => {
@@ -153,6 +178,7 @@ const Player = () => {
     }
   };
 
+  // Xử lý người dùng click vào button previous song
   const handlePrevSong = () => {
     if (songs) {
       let currentSongIndex;
@@ -165,7 +191,17 @@ const Player = () => {
     }
   };
 
-  const handleShuffle = () => {};
+  // Xử lý người dùng click vào button shuffle
+  const handleShuffle = () => {
+    const randomIndex = Math.round(Math.random() * songs?.length) - 1;
+
+    // Gửi 1 actions đến redux reducer id của bài hát được random
+    dispatch(actions.setCurSongId(songs[randomIndex].encodeId));
+    dispatch(actions.play(true));
+
+    // Set isShuffle ngược lại từ false --> true
+    setIsShuffle((prev) => !prev);
+  };
 
   return (
     <div className="bg-main-400 px-5 h-full flex">
@@ -198,7 +234,9 @@ const Player = () => {
       <div className="w-[40%] flex-auto border flex items-center justify-center gap-2 flex-col border-red-500 py-2">
         <div className="flex gap-8 justify-center items-center">
           <span
-            className={`cursor-pointer ${isShuffle && "text-purple-600"}`}
+            className={`cursor-pointer ${
+              isShuffle ? "text-purple-600" : "text-black"
+            }`}
             title="Bật phát ngẫu nhiên"
             onClick={() => setIsShuffle((prev) => !prev)}
           >
@@ -226,7 +264,11 @@ const Player = () => {
           >
             <MdSkipNext size={24} />
           </span>
-          <span className="cursor-pointer" title="Bật phát lại tất cả">
+          <span
+            className={`cursor-pointer ${isRepeat && "text-purple-600"}`}
+            title="Bật phát lại tất cả"
+            onClick={() => setIsRepeat((prev) => !prev)}
+          >
             <CiRepeat size={24} />
           </span>
         </div>
