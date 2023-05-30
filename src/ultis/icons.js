@@ -25,6 +25,7 @@ import {
   BsDot,
 } from "react-icons/bs";
 import { CiRepeat, CiShuffle } from "react-icons/ci";
+import { TbRepeatOnce } from "react-icons/tb";
 
 const icons = {
   MdOutlineLibraryMusic,
@@ -47,6 +48,7 @@ const icons = {
   BsPauseFill,
   BsMusicNoteBeamed,
   BsDot,
+  TbRepeatOnce,
 };
 
 export default icons;

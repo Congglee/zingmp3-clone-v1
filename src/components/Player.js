@@ -16,6 +16,7 @@ const {
   BsFillPlayFill,
   BsPauseFill,
   CiShuffle,
+  TbRepeatOnce,
 } = icons;
 
 var intervalId;
@@ -25,7 +26,7 @@ const Player = () => {
   const [audio, setAudio] = useState(new Audio()); // Lưu trữ source để phát nhạc
   const [curSeconds, setCurSeconds] = useState(0); // Lưu thời gian hiện tại của audio trong progressbar
   const [isShuffle, setIsShuffle] = useState(false);
-  const [isRepeat, setIsRepeat] = useState(false);
+  const [repeatMode, setRepeatMode] = useState(0);
   const dispatch = useDispatch();
 
   // Lưu trữ một tham chiếu tới một đối tượng DOM bằng useRef hook
@@ -97,15 +98,15 @@ const Player = () => {
     }
   }, [audio]);
 
-  // useEffect được thực thi khi audio, isShuffle, isRepeat bị thay đổi (dùng cho việc phát nhạc khi người dùng click vào một trong hai button shuffle, repeat hoặc cả hai)
+  // useEffect được thực thi khi audio, isShuffle, repeatMode bị thay đổi (dùng cho việc phát nhạc khi người dùng click vào một trong hai button shuffle, repeat hoặc cả hai)
   useEffect(() => {
     const handleEnded = () => {
       // Nếu isShuffle là true
       if (isShuffle) {
         handleShuffle();
-      } else if (isRepeat) {
-        // Nếu isRepeat là true
-        handleNextSong();
+      } else if (repeatMode) {
+        // Nếu repeatMode === 1 thì gọi hàm handleRepeatOne (phát lại một bài hát) còn khác thì gọi hàm handleNextSong (phát lại playlist)
+        repeatMode === 1 ? handleRepeatOne() : handleNextSong();
       } else {
         // Trường hợp người dùng không click vào button nào cả
         audio.pause();
@@ -119,7 +120,7 @@ const Player = () => {
     return () => {
       audio.removeEventListener("ended", handleEnded);
     };
-  }, [audio, isShuffle, isRepeat]);
+  }, [audio, isShuffle, repeatMode]);
 
   // Xử lý button play music
   const handleTogglePlayMusic = () => {
@@ -191,6 +192,11 @@ const Player = () => {
     }
   };
 
+  // Xử lý người dùng click vào button repeat one
+  const handleRepeatOne = () => {
+    audio.play();
+  };
+
   // Xử lý người dùng click vào button shuffle
   const handleShuffle = () => {
     const randomIndex = Math.round(Math.random() * songs?.length) - 1;
@@ -198,9 +204,6 @@ const Player = () => {
     // Gửi 1 actions đến redux reducer id của bài hát được random
     dispatch(actions.setCurSongId(songs[randomIndex].encodeId));
     dispatch(actions.play(true));
-
-    // Set isShuffle ngược lại từ false --> true
-    setIsShuffle((prev) => !prev);
   };
 
   return (
@@ -265,11 +268,15 @@ const Player = () => {
             <MdSkipNext size={24} />
           </span>
           <span
-            className={`cursor-pointer ${isRepeat && "text-purple-600"}`}
+            className={`cursor-pointer ${repeatMode && "text-purple-600"}`}
             title="Bật phát lại tất cả"
-            onClick={() => setIsRepeat((prev) => !prev)}
+            onClick={() => setRepeatMode((prev) => (prev === 2 ? 0 : prev + 1))}
           >
-            <CiRepeat size={24} />
+            {repeatMode === 1 ? (
+              <TbRepeatOnce size={24} />
+            ) : (
+              <CiRepeat size={24} />
+            )}
           </span>
         </div>
 
