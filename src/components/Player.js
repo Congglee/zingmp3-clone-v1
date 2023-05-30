@@ -5,6 +5,7 @@ import icons from "../ultis/icons";
 import * as actions from "../store/actions";
 import moment from "moment";
 import { toast } from "react-toastify";
+import LoadingSong from "./LoadingSong";
 
 const {
   AiFillHeart,
@@ -17,16 +18,22 @@ const {
   BsPauseFill,
   CiShuffle,
   TbRepeatOnce,
+  BsMusicNoteList,
+  SlVolume1,
+  SlVolumeOff,
+  SlVolume2,
 } = icons;
 
 var intervalId;
-const Player = () => {
+const Player = ({ setIsShowRightSideBar }) => {
   const { curSongId, isPlaying, songs } = useSelector((state) => state.music);
   const [songInfo, setSongInfo] = useState(null); // Lưu thông tin bài hát
   const [audio, setAudio] = useState(new Audio()); // Lưu trữ source để phát nhạc
   const [curSeconds, setCurSeconds] = useState(0); // Lưu thời gian hiện tại của audio trong progressbar
-  const [isShuffle, setIsShuffle] = useState(false);
-  const [repeatMode, setRepeatMode] = useState(0);
+  const [isShuffle, setIsShuffle] = useState(false); // Lưu trữ giá trị để handle việc bật tắt button shuffle
+  const [repeatMode, setRepeatMode] = useState(0); // Lưu trữ giá trị để handle việc bật tắt button repeat
+  const [isLoadedSource, setIsLoadedSource] = useState(true); // Lưu trữ giá trị để handle hiển thị loading icon khi source đang nạp
+  const [volume, setVolume] = useState(100); // Handle volume audio
   const dispatch = useDispatch();
 
   // Lưu trữ một tham chiếu tới một đối tượng DOM bằng useRef hook
@@ -36,11 +43,12 @@ const Player = () => {
   // useEffect được thực thị khi curSongId thay đổi (gọi api để lấy ra thông tin bài hát và source của bài hát đó)
   useEffect(() => {
     const fetchDetailSong = async () => {
+      setIsLoadedSource(false); // isLoadedSource === false khi việc gọi api đang chạy
       const [res1, res2] = await Promise.all([
         apis.apiGetDetailSong(curSongId),
         apis.apiGetSong(curSongId),
       ]);
-
+      setIsLoadedSource(true); // Giá trị true === true khi việc gọi api đã hoàn thành
       // res1: thông tin của bài hát
       if (res1.data.err === 0) {
         setSongInfo(res1.data.data);
@@ -121,6 +129,12 @@ const Player = () => {
       audio.removeEventListener("ended", handleEnded);
     };
   }, [audio, isShuffle, repeatMode]);
+
+  // useEffect được thực thị khi volume bị thay đổi (dùng cho việc điều chỉnh volume của audio)
+  useEffect(() => {
+    // audio.volume = 0 -> 1
+    audio.volume = volume / 100;
+  }, [volume]);
 
   // Xử lý button play music
   const handleTogglePlayMusic = () => {
@@ -234,7 +248,7 @@ const Player = () => {
         </div>
       </div>
 
-      <div className="w-[40%] flex-auto border flex items-center justify-center gap-2 flex-col border-red-500 py-2">
+      <div className="w-[40%] flex-auto flex items-center justify-center gap-2 flex-col py-2">
         <div className="flex gap-8 justify-center items-center">
           <span
             className={`cursor-pointer ${
@@ -255,7 +269,10 @@ const Player = () => {
             className="p-1 border cursor-pointer border-gray-700 hover:text-main-500 rounded-full"
             onClick={handleTogglePlayMusic}
           >
-            {isPlaying ? (
+            {/* Nếu isLoadedSoruce có giá trị là false sẽ khởi chạy component LoadingSong */}
+            {!isLoadedSource ? (
+              <LoadingSong />
+            ) : isPlaying ? (
               <BsPauseFill size={30} />
             ) : (
               <BsFillPlayFill size={30} />
@@ -296,7 +313,33 @@ const Player = () => {
         </div>
       </div>
 
-      <div className="w-[30%] flex-auto border border-red-500">Volume</div>
+      <div className="w-[30%] flex-auto flex items-center justify-end gap-4 ">
+        <div className="flex gap-2 items-center">
+          <span onClick={() => setVolume((prev) => (+prev === 0 ? 70 : 0))}>
+            {+volume >= 50 ? (
+              <SlVolume2 />
+            ) : +volume === 0 ? (
+              <SlVolumeOff />
+            ) : (
+              <SlVolume1 />
+            )}
+          </span>
+          <input
+            type="range"
+            step={1}
+            min={0}
+            max={100}
+            value={volume}
+            onChange={(e) => setVolume(e.target.value)}
+          />
+        </div>
+        <span
+          onClick={() => setIsShowRightSideBar((prev) => !prev)}
+          className="p-1 rounded-sm cursor-pointer bg-main-500 opacity-90 hover:opacity-100"
+        >
+          <BsMusicNoteList size={20} />
+        </span>
+      </div>
     </div>
   );
 };
