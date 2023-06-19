@@ -4,6 +4,14 @@ import actionTypes from "../actions/actionTypes";
 const initState = {
   banner: [],
   chill: {}, // state lưu playlist chill 😀
+  positiveEnergy: {},
+  top100: {},
+  trendingArtist: {},
+  newMusic: [],
+  isLoading: false,
+  newRelease: {},
+  weekChart: [],
+  albumHot: {},
 };
 
 // Định nghĩa một hàm reducer được gọi là appReducer.
@@ -26,6 +34,33 @@ const appReducer = (state = initState, action) => {
         chill:
           action.homeData?.find((item) => item.sectionId === "hEditorTheme") ||
           {},
+        positiveEnergy:
+          action.homeData?.find((item) => item.sectionId === "hEditorTheme2") ||
+          {},
+        top100:
+          action.homeData?.find((item) => item.sectionId === "h100") || {},
+        trendingArtist:
+          action.homeData?.find((item) => item.sectionId === "hArtistTheme") ||
+          {},
+        // newMusic:
+        //   {
+        //     ...action.homeData?.find((item) => item.sectionId === "hAlbum"),
+        //     title: "Nhạc mới",
+        //   } || {},
+        newRelease:
+          action.homeData?.find((item) => item.sectionType === "new-release") ||
+          {},
+        weekChart:
+          action.homeData?.find((item) => item.sectionType === "weekChart")
+            ?.items || [],
+        albumHot:
+          action.homeData?.find((item) => item.sectionId === "hAlbum") || {},
+      };
+
+    case actionTypes.LOADING:
+      return {
+        ...state,
+        isLoading: action.flag,
       };
 
     default:

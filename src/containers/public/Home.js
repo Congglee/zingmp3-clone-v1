@@ -1,11 +1,49 @@
 import React, { useEffect } from "react";
-import { Slider, Section } from "../../components";
+import { useSelector } from "react-redux";
+import { Slider, Section, NewRelease } from "../../components";
+import { Link } from "react-router-dom";
 
 const Home = () => {
+  const {
+    chill,
+    positiveEnergy,
+    top100,
+    trendingArtist,
+    newMusic,
+    weekChart,
+    albumHot,
+  } = useSelector((state) => state.app);
+  console.log(weekChart);
+
   return (
     <div className="overflow-y-auto w-full">
       <Slider />
-      <Section />
+      <Section data={chill} />
+      <Section data={positiveEnergy} />
+      <NewRelease />
+      <Section data={top100} />
+      <Section data={trendingArtist} />
+      {/* <Section data={newMusic} /> */}
+
+      <div className="flex items-center px-[43px] w-full mt-12">
+        {weekChart?.map((item) => (
+          <Link
+            to={item?.link?.split(".")[0]}
+            key={item.link}
+            className="flex-1 px-4"
+          >
+            <img
+              src={item.cover}
+              alt="cover"
+              className="w-full object-cover rounded-md"
+            />
+          </Link>
+        ))}
+      </div>
+
+      <Section data={albumHot} />
+
+      <div className="w-full h-[500px]"></div>
     </div>
   );
 };
