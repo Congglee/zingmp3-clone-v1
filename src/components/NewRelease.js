@@ -7,10 +7,13 @@ const NewRelease = () => {
   const [isActived, setIsActived] = useState(0);
   const [songs, setSongs] = useState([]);
 
+  //  useEffect được thực thị khi isActived, newRelease bị thay đổi (dùng cho việc hiển thị danh sách bài hát VN hay quốc tế khi người dùng click vào button)
   useEffect(() => {
+    // Nếu isActived tồn tại (người dùng có click vào button) thì đặt lại songs trong mảng newRelease
+
     isActived
-      ? setSongs(newRelease?.items?.others)
-      : setSongs(newRelease?.items?.vPop);
+      ? setSongs(newRelease?.items?.others) // Nếu isActived là true (isActived === 1) songs trong newRelease sẽ là của Việt Nam
+      : setSongs(newRelease?.items?.vPop); // Nếu isActived là false (isActived === 0) songs trong newRelease sẽ là của Quốc tế
   }, [isActived, newRelease]);
 
   return (

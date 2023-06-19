@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import * as apis from "../../apis";
 import moment from "moment/moment";
 import { AudioLoading, Lists } from "../../components";
@@ -11,12 +11,16 @@ import icons from "../../ultis/icons";
 const { BsFillPlayFill } = icons;
 
 const Album = () => {
+  const location = useLocation();
+  // console.log(location); // {pathname: '/album/Nhac-Chua-Buon-HIEUTHUHAI-Da-LAB-AMEE-Juky-San/ZWZBFW9C', search: '', hash: '', state: {playAlbum: true}, key: '5nw5fljc'}
+
   const { pid } = useParams();
   const { isPlaying } = useSelector((state) => state.music);
   const [playlistData, setPlaylistData] = useState({});
 
   const dispatch = useDispatch();
 
+  // useEffect thực thi khi pid thay đổi (dùng cho việc call api cho chi tiết danh sách playlist)
   useEffect(() => {
     const fetchDetailPlaylist = async () => {
       dispatch(actions.loading(true));
@@ -31,6 +35,19 @@ const Album = () => {
 
     fetchDetailPlaylist();
   }, [pid]);
+
+  // useEffect thực thi khi pid và playlistData thay đổi (dùng cho việc kiểm tra người dùng có click vào nút play khi hover vào playlist không)
+  useEffect(() => {
+    // Nếu playAlbum trong state tồn tại (người dùng có click vào button play khi hover vào playlist)
+    if (location.state?.playAlbum) {
+      const randomSong =
+        Math.round(Math.random() * playlistData?.song?.items?.length) - 1; // Lấy ra bài hát ngẫu nhiên
+      dispatch(
+        actions.setCurSongId(playlistData?.song?.items[randomSong]?.encodeId)
+      );
+      dispatch(actions.play(true));
+    }
+  }, [pid, playlistData]);
 
   return (
     <div className="flex relative gap-8 w-full h-full px-[59px] animate-scale-up-center">

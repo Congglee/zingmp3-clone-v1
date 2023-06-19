@@ -8,7 +8,7 @@ const initState = {
   top100: {},
   trendingArtist: {},
   newMusic: [],
-  isLoading: false,
+  isLoading: false, // state lưu giá trị true hoặc false cho loading data
   newRelease: {},
   weekChart: [],
   albumHot: {},

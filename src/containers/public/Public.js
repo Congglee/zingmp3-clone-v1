@@ -22,6 +22,7 @@ const Public = () => {
         </div>
 
         <div className="flex-auto relative flex flex-col border border-red-500">
+          {/* Nếu isLoading là true thì chạy component <Loading /> */}
           {isLoading && (
             <div className="absolute top-0 bottom-0 z-20 left-0 right-0 bg-main-200 flex items-center justify-center">
               <Loading />
