@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Slider, Section, NewRelease } from "../../components";
+import { Slider, Section, NewRelease, ChartSection } from "../../components";
 import { Link } from "react-router-dom";
 
 const Home = () => {
@@ -21,6 +21,7 @@ const Home = () => {
       <Section data={positiveEnergy} />
       <NewRelease />
       <Section data={top100} />
+      <ChartSection />
       <Section data={trendingArtist} />
       {/* <Section data={newMusic} /> */}
 
