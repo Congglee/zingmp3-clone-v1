@@ -7,6 +7,7 @@ const Home = () => {
   const {
     chill,
     positiveEnergy,
+    remixDance,
     top100,
     trendingArtist,
     newMusic,
@@ -19,12 +20,10 @@ const Home = () => {
       <Slider />
       <Section data={chill} />
       <Section data={positiveEnergy} />
+      <Section data={remixDance} />
       <NewRelease />
-      <Section data={top100} />
-      <ChartSection />
-      <Section data={trendingArtist} />
-      {/* <Section data={newMusic} /> */}
 
+      <ChartSection />
       <div className="flex items-center px-[43px] w-full mt-12">
         {weekChart?.map((item) => (
           <Link
@@ -40,6 +39,10 @@ const Home = () => {
           </Link>
         ))}
       </div>
+
+      <Section data={top100} />
+      <Section data={trendingArtist} />
+      {/* <Section data={newMusic} /> */}
 
       <Section data={albumHot} />
 

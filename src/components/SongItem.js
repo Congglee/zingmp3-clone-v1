@@ -12,15 +12,14 @@ const SongItem = ({
   releaseDate,
   order,
   percent,
+  style,
 }) => {
   const dispatch = useDispatch();
 
   return (
     <div
       className={`w-full flex p-[10px] justify-between items-center gap-[10px] rounded-md cursor-pointer ${
-        order
-          ? "text-white bg-[hsla(0,0%,100%,0.07)] hover:bg-[#945ea7]"
-          : "text-black hover:bg-main-200"
+        style || "text-black hover:bg-main-200"
       }`}
       onClick={() => {
         dispatch(actions.setCurSongId(sid));
@@ -30,7 +29,13 @@ const SongItem = ({
       <div className="flex gap-4">
         {order && (
           <span
-            className={`${order === 1 ? "" : ""} text-white text-[32px] m-auto`}
+            className={`${
+              order === 1
+                ? "text-shadow-no1"
+                : order === 2
+                ? "text-shadow-no2"
+                : "text-shadow-no3"
+            } text-[rgba(77,34,104,0.9)] text-[32px] m-auto`}
           >
             {order}
           </span>
@@ -51,7 +56,7 @@ const SongItem = ({
           )}
         </div>
       </div>
-      {percent && <span>{`${percent}%`}</span>}
+      {percent && <span className="font-bold">{`${percent}%`}</span>}
     </div>
   );
 };

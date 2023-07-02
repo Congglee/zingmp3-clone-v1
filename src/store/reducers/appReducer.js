@@ -5,6 +5,7 @@ const initState = {
   banner: [],
   chill: {}, // state lưu playlist chill 😀
   positiveEnergy: {},
+  remixDance: {},
   top100: {},
   trendingArtist: {},
   newMusic: [],
@@ -38,6 +39,9 @@ const appReducer = (state = initState, action) => {
           {},
         positiveEnergy:
           action.homeData?.find((item) => item.sectionId === "hEditorTheme2") ||
+          {},
+        remixDance:
+          action.homeData?.find((item) => item.sectionId === "hEditorTheme3") ||
           {},
         top100:
           action.homeData?.find((item) => item.sectionId === "h100") || {},

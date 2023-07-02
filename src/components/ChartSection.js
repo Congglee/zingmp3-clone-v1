@@ -1,13 +1,26 @@
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import bgChart from "../assets/bg-chart.jpg";
 import { Line } from "react-chartjs-2";
 import { Chart } from "chart.js/auto";
 import { useSelector } from "react-redux";
 import { SongItem } from "./";
+import _ from "lodash";
+import { Link } from "react-router-dom";
+import path from "../ultis/path";
+import icons from "../ultis/icons";
+
+const { BsFillPlayFill } = icons;
 
 const ChartSection = () => {
   const [data, setData] = useState(null);
   const { chart, rank } = useSelector((state) => state.app);
+  const [tooltipState, setTooltipState] = useState({
+    opacity: 0, // chế độ hiển thị
+    top: 0, // tọa độ trục X
+    left: 0, // tọa độ trục Y
+  }); // tooltipCustom
+  const [selected, setSelected] = useState(null); // state lưu trữ encodeId của tooltip đang hover chuột vào point
+  const chartRef = useRef(); // <Line />
 
   const options = {
     responsive: true, // cho phép responsive
@@ -32,6 +45,60 @@ const ChartSection = () => {
     plugins: {
       // cấu hình các plugin bổ sung cho biểu đồ
       legend: false, // tắt hiển thị chú giải biểu đồ.
+      tooltip: {
+        enabled: false, // vô hiệu hóa tooltip do react-chartjs-2 cung cấp
+        external: ({ tooltip }) => {
+          // Khởi tạo một custom tooltip là một hàm nhận object tooltip làm tham số và trả về logic của tooltip
+          // console.log(tooltip);
+          if (!chartRef || !chartRef.current) return;
+
+          if (tooltip.opacity === 0) {
+            // Nếu opcity của tooltip là 0 (người dùng bỏ chuột ra khỏi điểm point)
+            if (tooltipState.opacity !== 0)
+              // Nếu opacity của tooltipState (custom tooltip) khác 0
+              setTooltipState((prev) => ({ ...prev, opacity: 0 })); // đặt lại state của tooltipState
+            return; // Không render ra tooltip
+          }
+
+          /*
+            Logic để hiển thị tooltip bài hát khi người dùng di chuột vào một điểm point của một đường line nào đó trên biểu đồ
+              - So sánh bằng counter do API cung cấp
+                VD: counter của API trả về
+                      - data: [8699, 5736, 3620, 4696, 9899, 12452, 9752, 10195, 10064, 10738, 8881, 8501] encodeId: "Z6AABFU6"
+              - Lấy ra counter, encodeId của API trả về và lưu vào biến khi người dùng di chuột di chuột vào điểm point
+              - Lấy ra counter, encodeId của điểm point mà người dùng đang di chuột vào hiện tại dựa vào counter lấy được từ API trả về
+              - Set encodeId vào state
+              - Tạo mới dữ liệu tooltipData dựa vào object tooltip 
+              - Kiểm tra nếu dữ liệu tooltipData mới khác với tooltipState custom thì set lại tooltipState đó bằng dữ liệu tooltipData mới
+          */
+
+          const counters = [];
+          for (let i = 0; i < 3; i++) {
+            counters.push({
+              data: chart?.items[Object.keys(chart?.items)[i]]
+                ?.filter((item) => item.hour % 2 === 0)
+                ?.map((item) => item.counter),
+              encodeId: Object.keys(chart?.items)[i],
+            });
+          }
+          // console.log(counters);
+
+          // console.log(+tooltip.body[0]?.lines[0]?.replace(".", ""));
+          const rs = counters.find((i) =>
+            i.data.some(
+              (n) => n === +tooltip.body[0]?.lines[0]?.replace(".", "")
+            )
+          );
+          setSelected(rs.encodeId);
+          const newTooltipData = {
+            opacity: 1,
+            left: tooltip.caretX,
+            top: tooltip.caretY,
+          };
+          if (!_.isEqual(tooltipState, newTooltipData))
+            setTooltipState(newTooltipData);
+        },
+      },
     },
     hover: {
       // cấu hình hành vi hover của biểu đồ:
@@ -39,6 +106,7 @@ const ChartSection = () => {
       intersect: false, // chỉ định rằng tương tác hover sẽ chỉ kích hoạt khi trực tiếp trên một mục, thay vì giao nhau với mục đó.
     },
   };
+  // console.log(selected);
 
   // useEffect được thực thi khi state data chart trong redux store thay đổi (dùng cho việc hiển thị biểu đồ)
   useEffect(() => {
@@ -75,15 +143,23 @@ const ChartSection = () => {
   }, [chart]);
 
   return (
-    <div className="px-[59px] mt-12 relative max-h-[430px]">
+    <div className="px-[59px] mt-12 relative max-h-[430px] rounded-md">
       <img
         src={bgChart}
         alt="bg-chart"
         className="w-full object-cover rounded-md max-h-[430px]"
       />
-      <div className="absolute top-0 z-10 left-[59px] right-[59px] bottom-0 bg-[rgba(77,34,104,0.9)]"></div>
-      <div className="absolute top-0 z-20 left-[59px] right-[59px] bottom-0 p-5 flex flex-col gap-8">
-        <h3 className="text-2xl text-white font-bold">#zingchart</h3>
+      <div className="absolute top-0 z-10 left-[59px] right-[59px] bottom-0 bg-[rgba(77,34,104,0.9)] rounded-md"></div>
+      <div className="absolute top-0 z-20 left-[59px] right-[59px] bottom-0 p-5 flex flex-col gap-8 rounded-md">
+        <Link
+          to={path.ZING_CHART}
+          className="flex gap-2 items-center text-white hover:text-green-800"
+        >
+          <h3 className="text-2xl font-bold">#zingchart</h3>
+          <span className="bg-white p-1 rounded-full">
+            <BsFillPlayFill size={18} color="green" />
+          </span>
+        </Link>
         <div className="flex gap-4 h-full">
           <div className="flex-3 flex flex-col gap-4">
             {rank
@@ -97,11 +173,39 @@ const ChartSection = () => {
                   sid={item.encodeId}
                   order={index + 1}
                   percent={Math.round((+item.score * 100) / +chart?.totalScore)}
+                  style="text-white bg-[hsla(0,0%,100%,0%) hover:bg-[#945ea7]"
                 />
               ))}
+            <Link
+              to={path.ZING_CHART}
+              className="text-white px-4 py-2 rounded-l-full rounded-r-full border m-auto border-white w-fit"
+            >
+              Xem thêm
+            </Link>
           </div>
-          <div className="flex-7 h-[90%]">
-            {data && <Line data={data} options={options} />}
+          <div className="flex-7 h-[90%] relative">
+            {data && <Line data={data} ref={chartRef} options={options} />}
+            <div
+              className="tooltip"
+              style={{
+                top: tooltipState.top,
+                left: tooltipState.left,
+                opacity: tooltipState.opacity,
+                position: "absolute",
+              }}
+            >
+              <SongItem
+                thumbnail={
+                  rank?.find((i) => i.encodeId === selected)?.thumbnail
+                }
+                title={rank?.find((i) => i.encodeId === selected)?.title}
+                artists={
+                  rank?.find((i) => i.encodeId === selected)?.artistsNames
+                }
+                sid={rank?.find((i) => i.encodeId === selected)?.encodeId}
+                style="bg-white"
+              />
+            </div>
           </div>
         </div>
       </div>
