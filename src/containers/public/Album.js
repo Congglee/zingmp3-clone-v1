@@ -22,6 +22,7 @@ const Album = () => {
 
   // useEffect thực thi khi pid thay đổi (dùng cho việc call api cho chi tiết danh sách playlist)
   useEffect(() => {
+    dispatch(actions.setCurAlbumId(pid));
     const fetchDetailPlaylist = async () => {
       dispatch(actions.loading(true));
 

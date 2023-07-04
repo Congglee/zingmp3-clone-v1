@@ -31,6 +31,24 @@ export const loading = (flag) => ({
   flag,
 });
 
+// Xử lý việc set lại data của bài hát hiện tại
+export const setCurSongData = (data) => ({
+  type: actionTypes.SET_CUR_SONG_DATA,
+  data,
+});
+
+// Xử lý việc set lại id của album hiện tại
+export const setCurAlbumId = (pid) => ({
+  type: actionTypes.SET_CUR_ALBUM_ID,
+  pid,
+});
+
+// Xử lý việc set lại data cho recentSongs
+export const setRecent = (data) => ({
+  type: actionTypes.SET_RECENT,
+  data,
+});
+
 // export const fetchDetailPlaylist = (pid) => async (dispatch) => {
 //   try {
 //     const response = await apis.apiGetDetailPlaylist(pid);

@@ -26,7 +26,7 @@ const commonConfig = {
 const musicConfig = {
   ...commonConfig,
   key: "music",
-  whitelist: ["curSongId"],
+  whitelist: ["curSongId", "curSongData", "curAlbumId", "recentSongs"],
 };
 
 // Định nghĩa một hàm reducer gốc được gọi là rootReducer.

@@ -28,6 +28,7 @@ import {
 import { CiRepeat, CiShuffle } from "react-icons/ci";
 import { TbRepeatOnce } from "react-icons/tb";
 import { SlVolume1, SlVolume2, SlVolumeOff } from "react-icons/sl";
+import { ImBin } from "react-icons/im";
 
 const icons = {
   MdOutlineLibraryMusic,
@@ -55,6 +56,7 @@ const icons = {
   SlVolume1,
   SlVolume2,
   SlVolumeOff,
+  ImBin,
 };
 
 export default icons;

@@ -52,6 +52,7 @@ const Player = ({ setIsShowRightSideBar }) => {
       // res1: thông tin của bài hát
       if (res1.data.err === 0) {
         setSongInfo(res1.data.data);
+        dispatch(actions.setCurSongData(res1.data.data));
       }
 
       // res2: link, file nhạc của bài hát
