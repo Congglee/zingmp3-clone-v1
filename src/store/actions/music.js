@@ -49,19 +49,25 @@ export const setRecent = (data) => ({
   data,
 });
 
-// export const fetchDetailPlaylist = (pid) => async (dispatch) => {
-//   try {
-//     const response = await apis.apiGetDetailPlaylist(pid);
-//     if (response.data.err === 0) {
-//       dispatch({
-//         type: actionTypes.PLAYLIST,
-//         songs: response.data?.data?.song?.items,
-//       });
-//     }
-//   } catch (error) {
-//     dispatch({
-//       type: actionTypes.PLAYLIST,
-//       songs: null,
-//     });
-//   }
-// };
+// Xử lý việc gọi api cho tìm kiếm
+export const search = (keyword) => async (dispatch) => {
+  try {
+    const response = await apis.apiSearch(keyword);
+    if (response.data.err === 0) {
+      dispatch({
+        type: actionTypes.SEARCH,
+        data: response.data.data,
+      });
+    } else {
+      dispatch({
+        type: actionTypes.SEARCH,
+        data: null,
+      });
+    }
+  } catch (error) {
+    dispatch({
+      type: actionTypes.SEARCH,
+      data: null,
+    });
+  }
+};
