@@ -13,7 +13,7 @@ const SongItem = ({
   order,
   percent,
   style,
-  sm,
+  size,
 }) => {
   const dispatch = useDispatch();
 
@@ -45,9 +45,7 @@ const SongItem = ({
         <img
           src={thumbnail}
           alt="thumbnail"
-          className={`${
-            sm ? "w-[40px] h-[40px]" : "w-[60px] h-[60px]"
-          } object-cover rounded-md`}
+          className={`${size || "w-[60px] h-[60px]"} object-cover rounded-md`}
         />
 
         <div className="flex flex-col">

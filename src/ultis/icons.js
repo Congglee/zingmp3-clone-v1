@@ -15,6 +15,7 @@ import {
   AiOutlineArrowRight,
   AiFillHeart,
   AiOutlineHeart,
+  AiOutlineUserAdd,
 } from "react-icons/ai";
 import { FiSearch } from "react-icons/fi";
 import {
@@ -29,6 +30,7 @@ import { CiRepeat, CiShuffle } from "react-icons/ci";
 import { TbRepeatOnce } from "react-icons/tb";
 import { SlVolume1, SlVolume2, SlVolumeOff } from "react-icons/sl";
 import { ImBin } from "react-icons/im";
+import { GrClose } from "react-icons/gr";
 
 const icons = {
   MdOutlineLibraryMusic,
@@ -57,6 +59,8 @@ const icons = {
   SlVolume2,
   SlVolumeOff,
   ImBin,
+  AiOutlineUserAdd,
+  GrClose,
 };
 
 export default icons;

@@ -5,7 +5,7 @@ import { createSearchParams, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import path from "../ultis/path";
 
-const { FiSearch } = icons;
+const { FiSearch, GrClose } = icons;
 
 const Search = () => {
   const navigate = useNavigate();
@@ -25,7 +25,15 @@ const Search = () => {
   };
 
   return (
-    <div className="w-full flex items-center">
+    <div className="w-full flex relative items-center">
+      {keyword && (
+        <span
+          onClick={() => setKeyword("")}
+          className="absolute right-[16px] cursor-pointer"
+        >
+          <GrClose />
+        </span>
+      )}
       <span className="h-10 pl-4 bg-[#dde4e4] flex items-center justify-center rounded-l-[20px] text-gray-500">
         <FiSearch size={20} />
       </span>

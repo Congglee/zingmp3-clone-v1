@@ -54,6 +54,7 @@ const NewRelease = () => {
               artists={item.artistsNames}
               releaseDate={item.releaseDate}
               sid={item.encodeId}
+              size="w-[40px] h-[40px]"
             />
           </div>
         ))}

@@ -6,7 +6,7 @@ import * as actions from "../store/actions";
 
 const { BsMusicNoteBeamed } = icons;
 
-const List = ({ songData }) => {
+const List = ({ songData, isHideAlbum }) => {
   const dispatch = useDispatch();
   // console.log(songData);
   return (
@@ -27,9 +27,11 @@ const List = ({ songData }) => {
       }}
     >
       <div className="flex items-center gap-4 flex-1">
-        <span>
-          <BsMusicNoteBeamed />
-        </span>
+        {!isHideAlbum && (
+          <span>
+            <BsMusicNoteBeamed />
+          </span>
+        )}
         <img
           src={songData?.thumbnail}
           alt="thumbnail"
@@ -41,15 +43,18 @@ const List = ({ songData }) => {
               ? `${songData?.title?.slice(0, 30)}...`
               : songData?.title}
           </span>
-          <span>{songData?.artistsNames}</span>
+          <span className="text-xs opacity-70">{songData?.artistsNames}</span>
         </span>
       </div>
-      <div className="flex-1 flex justify-center">
-        {songData?.album?.title?.length > 30
-          ? `${songData?.album?.title?.slice(0, 30)}...`
-          : songData?.album?.title}
-      </div>
-      <div className="flex-1 flex justify-end">
+
+      {!isHideAlbum && (
+        <div className="flex-1 flex justify-center">
+          {songData?.album?.title?.length > 30
+            ? `${songData?.album?.title?.slice(0, 30)}...`
+            : songData?.album?.title}
+        </div>
+      )}
+      <div className="flex-1 flex justify-end text-xs opacity-70">
         {moment.utc(songData?.duration * 1000).format("mm:ss")}
       </div>
     </div>

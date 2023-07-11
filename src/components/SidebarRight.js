@@ -71,7 +71,7 @@ const SidebarRight = () => {
                     title={item?.title}
                     artists={item?.artists}
                     sid={item?.sid}
-                    sm
+                    size="w-[40px] h-[40px]"
                   />
                 ))}
               </div>
@@ -110,7 +110,7 @@ const SidebarRight = () => {
                     title={item?.title}
                     artists={item?.artistsNames}
                     sid={item?.encodeId}
-                    sm
+                    size="w-[40px] h-[40px]"
                   />
                 ))}
               </div>
