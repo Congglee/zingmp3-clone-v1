@@ -6,7 +6,7 @@ import * as actions from "../store/actions";
 
 const { BsMusicNoteBeamed } = icons;
 
-const List = ({ songData, isHideAlbum }) => {
+const List = ({ songData, isHideAlbum, isHideNode }) => {
   const dispatch = useDispatch();
   // console.log(songData);
   return (
@@ -27,7 +27,7 @@ const List = ({ songData, isHideAlbum }) => {
       }}
     >
       <div className="flex items-center gap-4 flex-1">
-        {!isHideAlbum && (
+        {!isHideNode && (
           <span>
             <BsMusicNoteBeamed />
           </span>

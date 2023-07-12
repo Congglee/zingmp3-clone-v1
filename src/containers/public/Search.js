@@ -10,7 +10,6 @@ const activeStyle =
 
 const Search = () => {
   const { keyword } = useSelector((state) => state.music);
-  console.log(keyword);
 
   return (
     <div className="w-full">
