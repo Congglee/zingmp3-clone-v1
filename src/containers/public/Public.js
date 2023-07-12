@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import {
   Player,
   SidebarLeft,
@@ -13,6 +13,7 @@ import { useSelector } from "react-redux";
 const Public = () => {
   const [isShowRightSideBar, setIsShowRightSideBar] = useState(true); // Lưu trữ giá trị handle việc ẩn hiện right sidebar
   const { isLoading } = useSelector((state) => state.app);
+  const { singer } = useParams();
 
   return (
     <div className="w-full relative h-screen flex flex-col bg-main-300">
@@ -29,7 +30,11 @@ const Public = () => {
             </div>
           )}
 
-          <div className="h-[70px] flex-none px-[59px] flex items-center">
+          <div
+            className={`h-[70px] ${
+              singer && "fixed top-0 left-[240px] right-[329px]"
+            } px-[59px] z-50 flex items-center`}
+          >
             <Header />
           </div>
           <div className="flex-auto w-full">

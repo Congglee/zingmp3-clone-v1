@@ -6,6 +6,7 @@ const initState = {
   chill: {}, // state lưu playlist chill 😀
   positiveEnergy: {},
   remixDance: {},
+  moodMeltSlowly: {},
   top100: {},
   trendingArtist: {},
   newMusic: [],
@@ -15,6 +16,7 @@ const initState = {
   albumHot: {},
   chart: {},
   rank: [],
+  singers: null,
 };
 
 // Định nghĩa một hàm reducer được gọi là appReducer.
@@ -43,6 +45,9 @@ const appReducer = (state = initState, action) => {
         remixDance:
           action.homeData?.find((item) => item.sectionId === "hEditorTheme3") ||
           {},
+        moodMeltSlowly:
+          action.homeData?.find((item) => item.sectionId === "hEditorTheme4") ||
+          {},
         top100:
           action.homeData?.find((item) => item.sectionId === "h100") || {},
         trendingArtist:
@@ -67,6 +72,10 @@ const appReducer = (state = initState, action) => {
         rank:
           action.homeData?.find((item) => item.sectionId === "hZC")?.items ||
           [],
+        singers:
+          action.homeData?.find(
+            (item) => item.sectionType === "newReleaseChart"
+          )?.items || [],
       };
 
     case actionTypes.LOADING:

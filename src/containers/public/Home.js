@@ -1,9 +1,23 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Slider, Section, NewRelease, ChartSection } from "../../components";
+import {
+  Slider,
+  Section,
+  NewRelease,
+  ChartSection,
+  Artist,
+} from "../../components";
 import { Link } from "react-router-dom";
+import Sliders from "react-slick";
 
 const Home = () => {
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 7,
+    slidesToScroll: 7,
+  };
   const {
     chill,
     positiveEnergy,
@@ -13,6 +27,8 @@ const Home = () => {
     newMusic,
     weekChart,
     albumHot,
+    moodMeltSlowly,
+    singers,
   } = useSelector((state) => state.app);
 
   return (
@@ -21,6 +37,7 @@ const Home = () => {
       <Section data={chill} />
       <Section data={positiveEnergy} />
       <Section data={remixDance} />
+      {moodMeltSlowly && <Section data={moodMeltSlowly} />}
       <NewRelease />
 
       <ChartSection />
@@ -39,6 +56,23 @@ const Home = () => {
           </Link>
         ))}
       </div>
+
+      {singers && (
+        <div className="px-[43px] w-full mt-12">
+          <Sliders {...settings}>
+            {singers?.map((item) => (
+              <div key={item.album.artists[0].id} className="px-4">
+                <Artist
+                  image={item.album.artists[0].thumbnail}
+                  follower={item.album.artists[0].totalFollow}
+                  link={item.album.artists[0].link}
+                  title={item.album.artists[0].name}
+                />
+              </div>
+            ))}
+          </Sliders>
+        </div>
+      )}
 
       <Section data={top100} />
       <Section data={trendingArtist} />

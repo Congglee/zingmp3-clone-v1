@@ -7,7 +7,7 @@ const Artist = ({ image, title, follower, link }) => {
   const [isHover, setIsHover] = useState(false);
 
   return (
-    <div className="w-1/5 flex flex-col gap-[15px]">
+    <div className="w-full flex flex-col gap-[15px]">
       <Link
         className="relative overflow-hidden rounded-full cursor-pointer"
         onMouseEnter={() => setIsHover(true)}
