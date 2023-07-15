@@ -37,7 +37,7 @@ const Search = () => {
       )}
       <span
         className={`h-10 pl-4 ${
-          singer ? "bg-[rgba(0,0,0,0.2)]" : "bg-[#dde4e4]"
+          singer ? "bg-[rgba(0,0,0,0.2)] text-gray-200" : "bg-[#dde4e4]"
         } flex items-center justify-center rounded-l-[20px] text-gray-500`}
       >
         <FiSearch size={20} />
@@ -45,7 +45,9 @@ const Search = () => {
       <input
         type="text"
         className={`outline-none w-full px-4 ${
-          singer ? "bg-[rgba(0,0,0,0.2)]" : "bg-[#dde4e4]"
+          singer
+            ? "bg-[rgba(0,0,0,0.2)] placeholder:text-gray-200"
+            : "bg-[#dde4e4]"
         } py-2 rounded-r-[20px] h-10 text-gray-500`}
         placeholder="Tìm kiếm bài hát, nghệ sĩ, lời bài hát..."
         value={keyword}

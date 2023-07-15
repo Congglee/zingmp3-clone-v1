@@ -31,12 +31,13 @@ const Public = () => {
           )}
 
           <div
-            className={`h-[70px] ${
-              singer && "fixed top-0 left-[240px] right-[329px]"
-            } px-[59px] z-50 flex items-center`}
+            className={`fixed h-[70px] ${
+              singer ? "bg-transparent" : "bg-main-300"
+            } top-0 left-[240px] right-0 px-[59px] z-30 flex items-center`}
           >
             <Header />
           </div>
+
           <div className="flex-auto w-full">
             <Scrollbars autoHide style={{ width: "100%", height: "100%" }}>
               <Outlet />

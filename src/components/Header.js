@@ -1,19 +1,23 @@
 import React from "react";
 import icons from "../ultis/icons";
 import { Search } from "./index";
+import { useNavigate, useParams } from "react-router-dom";
 
 const { HiArrowNarrowLeft, HiArrowNarrowRight } = icons;
 
 const Header = () => {
+  const navigate = useNavigate();
+  const { singer } = useParams();
+
   return (
     <div className="flex justify-between w-full items-center">
       <div className="flex gap-6 w-full items-center">
-        <div className="flex gap-6 text-gray-400">
-          <span>
-            <HiArrowNarrowLeft size={24} />
+        <div className="flex gap-6 cursor-pointer">
+          <span onClick={() => navigate(-1)}>
+            <HiArrowNarrowLeft size={24} color={singer ? "#ccc" : "black"} />
           </span>
-          <span>
-            <HiArrowNarrowRight size={24} />
+          <span onClick={() => navigate(1)}>
+            <HiArrowNarrowRight size={24} color={singer ? "#ccc" : "black"} />
           </span>
         </div>
 

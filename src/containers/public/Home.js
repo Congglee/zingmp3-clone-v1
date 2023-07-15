@@ -33,13 +33,13 @@ const Home = () => {
 
   return (
     <div className="overflow-y-auto w-full">
+      <div className="w-full h-[70px]"></div>
       <Slider />
       <Section data={chill} />
       <Section data={positiveEnergy} />
       <Section data={remixDance} />
       {moodMeltSlowly && <Section data={moodMeltSlowly} />}
       <NewRelease />
-
       <ChartSection />
       <div className="flex items-center px-[43px] w-full mt-12">
         {weekChart?.map((item) => (
@@ -56,7 +56,6 @@ const Home = () => {
           </Link>
         ))}
       </div>
-
       {singers && (
         <div className="px-[43px] w-full mt-12">
           <Sliders {...settings}>
@@ -73,13 +72,10 @@ const Home = () => {
           </Sliders>
         </div>
       )}
-
       <Section data={top100} />
       <Section data={trendingArtist} />
       {/* <Section data={newMusic} /> */}
-
       <Section data={albumHot} />
-
       <div className="w-full h-[500px]"></div>
     </div>
   );
