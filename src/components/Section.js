@@ -1,5 +1,4 @@
-import React, { memo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { memo } from "react";
 import { SectionItem } from "./";
 
 const Section = ({ data }) => {
@@ -10,7 +9,7 @@ const Section = ({ data }) => {
         <span className="text-xs">TẤT CẢ</span>
       </div>
 
-      <div className="flex items-start justify-between">
+      <div className="flex items-start">
         {data &&
           data?.items?.length > 0 &&
           data.items
