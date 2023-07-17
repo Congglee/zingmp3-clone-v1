@@ -46,7 +46,7 @@ const SectionItem = ({
         className="w-full relative overflow-hidden rounded-lg"
       >
         {isHover && (
-          <div className="absolute top-0 bottom-0 z-40 left-0 right-0 bg-overlay-30 rounded-lg text-white flex items-center justify-center gap-3">
+          <div className="absolute top-0 bottom-0 z-20 left-0 right-0 bg-overlay-30 rounded-lg text-white flex items-center justify-center gap-3">
             <span>
               <AiOutlineHeart size={25} />
             </span>

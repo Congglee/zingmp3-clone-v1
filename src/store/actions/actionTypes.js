@@ -12,6 +12,7 @@ const actionTypes = {
   SET_ALBUM: "SET_ALBUM",
   PLAYLIST: "PLAYLIST",
   SEARCH: "SEARCH",
+  ZERO_SCROLLTOP: "ZERO_SCROLLTOP",
 };
 
 export default actionTypes;

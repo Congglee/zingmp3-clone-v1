@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { apiGetArtist } from "../../apis";
 import icons from "../../ultis/icons";
 import { Artist, Section, SongItem } from "../../components";
+import { useSelector } from "react-redux";
 
 const { AiOutlineUserAdd, BsFillPlayFill } = icons;
 
@@ -11,6 +12,7 @@ const Singer = () => {
   const [artistData, setArtistData] = useState(null);
   const [isHoverPlay, setIsHoverPlay] = useState(false);
   const ref = useRef();
+  // const { scrollTop } = useSelector((state) => state.app);
 
   useEffect(() => {
     const fetchArtistData = async () => {
@@ -75,7 +77,7 @@ const Singer = () => {
         </div>
       </div>
 
-      {artistData.topAlbum ? (
+      {artistData?.topAlbum ? (
         <div className="mt-[30px] px-[60px] w-full flex">
           <div className="w-[40%] flex-auto">
             <h3 className="mb-5 font-bold text-[20px]">Mới nhất</h3>
