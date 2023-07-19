@@ -3,7 +3,7 @@ import { apiGetChartHome } from "../../apis";
 import { Line } from "react-chartjs-2";
 import { Chart } from "chart.js/auto";
 import bgChart from "../../assets/bg-chart.jpg";
-import { List, SongItem } from "../../components";
+import { RankList, SongItem } from "../../components";
 import _ from "lodash";
 
 const ZingChart = () => {
@@ -171,9 +171,39 @@ const ZingChart = () => {
         </div>
       </div>
       <div className="px-[60px] mt-12">
-        {chartData?.RTChart?.items?.map((item) => (
-          <List songData={item} key={item.encodeId} />
-        ))}
+        <RankList data={chartData?.RTChart?.items} />
+      </div>
+      <div className="relative">
+        <img
+          src={bgChart}
+          alt="bg-chart"
+          className="w-full object-cover grayscale"
+        />
+        <div className="absolute top-0 left-0 bottom-0 right-0 bg-[rgba(206,217,217,0.9)]"></div>
+        <div className="absolute top-0 left-0 bottom-1/2 flex flex-col gap-8 right-0 mt-8 px-[60px]">
+          <h3 className="font-bold text-[40px] text-main-500">
+            Bảng Xếp Hạng Tuần
+          </h3>
+          <div className="flex gap-4">
+            {chartData?.weekChart &&
+              Object.entries(chartData?.weekChart)?.map((item, index) => (
+                <div
+                  className="flex-1 bg-gray-200 rounded-md px-[10px] py-5"
+                  key={index}
+                >
+                  <h3 className="text-[24px] text-main-500 font-bold">
+                    {item[0] === "vn"
+                      ? "Việt Nam"
+                      : item[0] === "us"
+                      ? "US-UK"
+                      : item[0] === "korea"
+                      ? "K-Pop"
+                      : ""}
+                  </h3>
+                </div>
+              ))}
+          </div>
+        </div>
       </div>
     </div>
   );
