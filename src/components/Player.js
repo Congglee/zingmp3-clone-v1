@@ -86,10 +86,10 @@ const Player = ({ setIsShowRightSideBar }) => {
 
     audio.pause();
     // Load source audio
-    audio.load();
+    curSeconds === 0 && audio.load();
 
     // Nếu isPlaying là true chạy audio hiện tại
-    if (isPlaying && thumbRef.current) {
+    if (audio.src && isPlaying && thumbRef.current) {
       audio.play();
 
       // gán intervalId bằng setInterval cho chạy một lần mỗi 0.2s
@@ -105,7 +105,7 @@ const Player = ({ setIsShowRightSideBar }) => {
         setCurSeconds(Math.round(audio.currentTime));
       }, 200);
     }
-  }, [audio]);
+  }, [audio, isPlaying]);
 
   // useEffect được thực thi khi audio, isShuffle, repeatMode bị thay đổi (dùng cho việc phát nhạc khi người dùng click vào một trong hai button shuffle, repeat hoặc cả hai)
   useEffect(() => {

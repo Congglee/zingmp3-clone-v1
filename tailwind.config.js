@@ -3,6 +3,10 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
   theme: {
     extend: {
+      fontFamily: {
+        Inter: ["Inter", "sans-serif"],
+      },
+
       backgroundColor: {
         "main-100": "#e7ecec",
         "main-200": "#dde4e4",

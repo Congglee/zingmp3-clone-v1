@@ -177,7 +177,7 @@ const ZingChart = () => {
         <img
           src={bgChart}
           alt="bg-chart"
-          className="w-full object-cover grayscale"
+          className="w-full h-[650px] object-cover grayscale"
         />
         <div className="absolute top-0 left-0 bottom-0 right-0 bg-[rgba(206,217,217,0.9)]"></div>
         <div className="absolute top-0 left-0 bottom-1/2 flex flex-col gap-8 right-0 mt-8 px-[60px]">
@@ -200,11 +200,21 @@ const ZingChart = () => {
                       ? "K-Pop"
                       : ""}
                   </h3>
+                  <div className="mt-4 h-fit">
+                    <RankList
+                      data={item[1]?.items}
+                      isHideAlbum={true}
+                      number={5}
+                      link={item[1]?.link}
+                    />
+                  </div>
                 </div>
               ))}
           </div>
         </div>
       </div>
+
+      <div className="w-full h-[500px]"></div>
     </div>
   );
 };

@@ -14,21 +14,18 @@ import * as actions from "../../store/actions";
 const Public = () => {
   const [isShowRightSideBar, setIsShowRightSideBar] = useState(true); // Lưu trữ giá trị handle việc ẩn hiện right sidebar
   const { isLoading, scrollTop } = useSelector((state) => state.app);
-  const { singer } = useParams();
   const dispatch = useDispatch();
 
   const handleScrollTop = (e) => {
-    if (singer) {
-      if (e.target.scrollTop === 0) {
-        dispatch(actions.zeroScrollTop(true));
-      } else {
-        dispatch(actions.zeroScrollTop(false));
-      }
+    if (e.target.scrollTop === 0) {
+      dispatch(actions.zeroScrollTop(true));
+    } else {
+      dispatch(actions.zeroScrollTop(false));
     }
   };
 
   return (
-    <div className="w-full relative h-screen flex flex-col bg-main-300">
+    <div className="w-full relative h-screen flex flex-col bg-main-300 font-Inter">
       <div className="w-full h-full flex flex-auto">
         <div className="w-[240px] h-full flex-none">
           <SidebarLeft />
