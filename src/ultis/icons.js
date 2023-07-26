@@ -3,6 +3,8 @@ import {
   MdOutlineFeed,
   MdSkipNext,
   MdSkipPrevious,
+  MdArrowBackIosNew,
+  MdArrowForwardIos,
 } from "react-icons/md";
 import {
   HiOutlineChartPie,
@@ -61,6 +63,8 @@ const icons = {
   ImBin,
   AiOutlineUserAdd,
   GrClose,
+  MdArrowBackIosNew,
+  MdArrowForwardIos,
 };
 
 export default icons;
