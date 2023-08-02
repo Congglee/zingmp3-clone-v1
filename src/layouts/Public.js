@@ -12,7 +12,7 @@ import {
 } from "../components";
 
 const Public = () => {
-  const [isShowRightSideBar, setIsShowRightSideBar] = useState(true); // Lưu trữ giá trị handle việc ẩn hiện right sidebar
+  const [isShowRightSideBar, setIsShowRightSideBar] = useState(false); // Lưu trữ giá trị handle việc ẩn hiện right sidebar
   const { isLoading, scrollTop } = useSelector((state) => state.app);
   const { curSongId } = useSelector((state) => state.music);
   const dispatch = useDispatch();
