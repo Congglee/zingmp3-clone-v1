@@ -1,26 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import * as apis from "../../apis";
+import * as apis from "../apis";
 import moment from "moment/moment";
-import { AudioLoading, Lists } from "../../components";
+import { AudioLoading, Lists } from "../components";
 import { Scrollbars } from "react-custom-scrollbars-2";
-import * as actions from "../../store/actions";
+import * as actions from "../store/actions";
 import { useDispatch, useSelector } from "react-redux";
-import icons from "../../ultis/icons";
+import icons from "../ultis/icons";
 
 const { BsFillPlayFill } = icons;
 
 const Album = () => {
-  const location = useLocation();
-  // console.log(location); // {pathname: '/album/Nhac-Chua-Buon-HIEUTHUHAI-Da-LAB-AMEE-Juky-San/ZWZBFW9C', search: '', hash: '', state: {playAlbum: true}, key: '5nw5fljc'}
-
+  const location = useLocation(); // example: {pathname: '/album/Nhac-Chua-Buon-HIEUTHUHAI-Da-LAB-AMEE-Juky-San/ZWZBFW9C', search: '', hash: '', state: {playAlbum: true}, key: '5nw5fljc'}
   const { pid } = useParams();
   const { isPlaying } = useSelector((state) => state.music);
   const [playlistData, setPlaylistData] = useState({});
 
   const dispatch = useDispatch();
 
-  // useEffect thực thi khi pid thay đổi (dùng cho việc call api cho chi tiết danh sách playlist)
+  // Xử lý việc call api cho chi tiết danh sách playlist
   useEffect(() => {
     dispatch(actions.setCurAlbumId(pid));
     const fetchDetailPlaylist = async () => {
@@ -37,7 +35,7 @@ const Album = () => {
     fetchDetailPlaylist();
   }, [pid]);
 
-  // useEffect thực thi khi pid và playlistData thay đổi (dùng cho việc kiểm tra người dùng có click vào nút play khi hover vào playlist không)
+  // Xử lý việc kiểm tra người dùng có click vào nút play khi hover vào playlist không
   useEffect(() => {
     // Nếu playAlbum trong state tồn tại (người dùng có click vào button play khi hover vào playlist)
     if (location.state?.playAlbum) {

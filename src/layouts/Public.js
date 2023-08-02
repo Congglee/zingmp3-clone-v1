@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import { Outlet } from "react-router-dom";
+import { Scrollbars } from "react-custom-scrollbars-2";
+import { useDispatch, useSelector } from "react-redux";
+import * as actions from "../store/actions";
 import {
+  Header,
+  Loading,
   Player,
   SidebarLeft,
   SidebarRight,
-  Header,
-  Loading,
-} from "../../components";
-import { Scrollbars } from "react-custom-scrollbars-2";
-import { useDispatch, useSelector } from "react-redux";
-import * as actions from "../../store/actions";
+} from "../components";
 
 const Public = () => {
   const [isShowRightSideBar, setIsShowRightSideBar] = useState(true); // Lưu trữ giá trị handle việc ẩn hiện right sidebar
@@ -33,7 +33,6 @@ const Public = () => {
         </div>
 
         <div className="flex-auto relative flex flex-col">
-          {/* Nếu isLoading là true thì chạy component <Loading /> */}
           {isLoading && (
             <div className="absolute top-0 bottom-0 z-20 left-0 right-0 bg-main-200 flex items-center justify-center">
               <Loading />

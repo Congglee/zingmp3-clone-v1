@@ -1,15 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
-import {
-  Slider,
-  Section,
-  NewRelease,
-  ChartSection,
-  Artist,
-  Loading,
-} from "../../components";
 import { Link } from "react-router-dom";
 import Sliders from "react-slick";
+import {
+  Artist,
+  ChartSection,
+  Loading,
+  NewRelease,
+  Section,
+  Slider,
+} from "../components";
 
 const Home = () => {
   const settings = {
@@ -25,7 +25,6 @@ const Home = () => {
     remixDance,
     top100,
     trendingArtist,
-    newMusic,
     weekChart,
     albumHot,
     moodMeltSlowly,
@@ -85,7 +84,6 @@ const Home = () => {
           )}
           <Section data={top100} />
           <Section data={trendingArtist} />
-          {/* <Section data={newMusic} /> */}
           <Section data={albumHot} />
           <div className="w-full h-[500px]"></div>
         </div>

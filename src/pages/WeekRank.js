@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { NavLink, useParams } from "react-router-dom";
-import bgChart from "../../assets/bg-chart.jpg";
-import { RankList } from "../../components";
+import bgChart from "../assets/bg-chart.jpg";
+import { RankList } from "../components";
 
 const notActiveStyle =
   "text-[24px] text-black py-[12px] font-semibold uppercase";
@@ -10,11 +10,6 @@ const activeStyle =
 
 const WeekRank = ({ weekChart }) => {
   const { pid } = useParams();
-  // console.log(weekChart);
-
-  useEffect(() => {
-    // console.log(pid);
-  }, []);
 
   return (
     <div>

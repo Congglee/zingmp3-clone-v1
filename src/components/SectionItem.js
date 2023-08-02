@@ -34,8 +34,8 @@ const SectionItem = ({
   return (
     <div
       onClick={() => {
-        // chuyển sang trang của phần tử đầu tiên của link
-        // kèm thêm một option khi chuyển trang là thêm một object có thuộc tính playAlbum value false vào object state (không click vào button play khi hover vào playlist)
+        // Chuyển sang trang của phần tử đầu tiên của link
+        // Kèm thêm một option khi chuyển trang là thêm một object có thuộc tính playAlbum value false vào object state (không click vào button play khi hover vào playlist)
         navigate(link?.split(".")[0], { state: { playAlbum: false } });
       }}
       className="flex flex-col gap-3 justify-evenly flex-1 p-4 text-sm cursor-pointer"
@@ -52,7 +52,7 @@ const SectionItem = ({
             </span>
             <span
               onClick={(e) => {
-                e.stopPropagation(); // chống hiện tượng nổi bọt (khi phần tử con và phần tử cha đều có sự kiện click)
+                e.stopPropagation(); // Chống hiện tượng nổi bọt (khi phần tử con và phần tử cha đều có sự kiện click)
                 // * Nếu không có đoạn trên thì sự kiện click sẽ chỉ nhận của phần tử cha
                 navigate(link?.split(".")[0], { state: { playAlbum: true } });
               }}

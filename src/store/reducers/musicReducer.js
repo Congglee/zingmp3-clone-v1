@@ -1,6 +1,5 @@
 import actionTypes from "../actions/actionTypes";
 
-// State khởi tạo ban đầu trong redux store
 const initState = {
   curSongId: null, // state lưu id của bài hát hiện tại
   curSongData: null, // state lưu data của bài hát hiện tại

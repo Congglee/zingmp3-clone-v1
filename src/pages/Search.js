@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { NavLink, Outlet, useSearchParams } from "react-router-dom";
-import { searchMenu } from "../../ultis/menu";
+import React from "react";
+import { NavLink, Outlet } from "react-router-dom";
+import { searchMenu } from "../ultis/menu";
 import { useSelector } from "react-redux";
 
 const notActiveStyle =

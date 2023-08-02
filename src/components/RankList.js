@@ -1,6 +1,5 @@
 import React, { memo, useEffect, useState } from "react";
 import { List } from "./";
-import path from "../ultis/path";
 import { useNavigate } from "react-router-dom";
 
 const RankList = ({ data, isHideAlbum, number, link }) => {
@@ -8,7 +7,7 @@ const RankList = ({ data, isHideAlbum, number, link }) => {
   const [songs, setSongs] = useState(null);
   const navigate = useNavigate();
 
-  // useEffect được thực thi khi isShowFull, data thay đổi (dùng việc người dùng nhấn vào button là xem tất cả hay ẩn bớt)
+  // Xử lý việc người dùng nhấn vào button là xem tất cả hay ẩn bớt
   useEffect(() => {
     if (!isShowFull) {
       setSongs(data?.filter((i, index) => index < number));

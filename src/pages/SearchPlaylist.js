@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { apiGetArtist } from "../../apis";
-import { SectionItem } from "../../components";
+import { apiGetArtist } from "../apis";
+import { SectionItem } from "../components";
 
 const SearchPlaylist = () => {
   const { searchData } = useSelector((state) => state.music);
@@ -17,6 +17,7 @@ const SearchPlaylist = () => {
 
     fetch();
   }, [searchData]);
+
   return (
     <div className="w-full flex-col flex gap-8 px-[44px]">
       <h3>SearchPlaylist</h3>

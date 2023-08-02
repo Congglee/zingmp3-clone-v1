@@ -18,17 +18,17 @@ const SidebarRight = () => {
     if (response.data?.err === 0) setPlaylist(response.data.data?.song?.items);
   };
 
-  // useEffect chỉ chạy một lần khi component được mount (dùng cho kiểm tra curAlbum có tồn tại không thì gọi api của playlist đấy)
+  // Xử lý việc kiểm tra curAlbum có tồn tại không thì gọi api của playlist đấy
   useEffect(() => {
     curAlbumId && fetchDetailPlaylist();
   }, []);
 
-  // useEffect được thực thi khi curAlbumId, isPlaying thay đổi (dùng cho việc gọi api để lấy dữ liệu của playlist hiện tại khi người dùng vào trang playlist đó và chọn phát một bài hát trong playlist đấy)
+  // Xử lý việc gọi api để lấy dữ liệu của playlist hiện tại khi người dùng vào trang playlist đó và chọn phát một bài hát trong playlist đấy
   useEffect(() => {
     if (curAlbumId && isPlaying) fetchDetailPlaylist();
   }, [curAlbumId, isPlaying]);
 
-  // useEffect được thực thi khi isPlaying và curSongId thay đổi (dùng cho việc nếu isPlaying là true thì set lại isRecent là false, khi người dùng chọn phát nhạc mà đang tab Nghe gần đây thì sẽ chuyển lại sang tab Danh sách phát)
+  // Xử lý việc nếu isPlaying là true thì set lại isRecent là false, khi người dùng chọn phát nhạc mà đang tab Nghe gần đây thì sẽ chuyển lại sang tab danh sách phát
   useEffect(() => {
     isPlaying && setIsRecent(false);
   }, [isPlaying, curSongId]);

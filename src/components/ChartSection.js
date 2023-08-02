@@ -1,7 +1,6 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import bgChart from "../assets/bg-chart.jpg";
 import { Line } from "react-chartjs-2";
-import { Chart } from "chart.js/auto";
 import { useSelector } from "react-redux";
 import { SongItem } from "./";
 import _ from "lodash";
@@ -15,16 +14,16 @@ const ChartSection = () => {
   const [data, setData] = useState(null);
   const { chart, rank } = useSelector((state) => state.app);
   const [tooltipState, setTooltipState] = useState({
-    opacity: 0, // chế độ hiển thị
-    top: 0, // tọa độ trục X
-    left: 0, // tọa độ trục Y
-  }); // tooltipCustom
-  const [selected, setSelected] = useState(null); // state lưu trữ encodeId của tooltip đang hover chuột vào point
-  const chartRef = useRef(); // <Line />
+    opacity: 0,
+    top: 0,
+    left: 0,
+  });
+  const [selected, setSelected] = useState(null);
+  const chartRef = useRef();
 
   const options = {
     responsive: true, // cho phép responsive
-    pointRadius: 0, // đặt bán kính của các điểm dữ liệu trong biểu đồ thành 0, ẩn chúng một cách hiệu quả
+    pointRadius: 0,
     maintainAspectRatio: false, // vô hiệu hóa bảo trì tỷ lệ khung hình của biểu đồ, cho phép biểu đồ có chiều rộng và chiều cao đáp ứng một cách độc lập.
     scales: {
       // xác định cấu hình cho tỷ lệ (trục) của biểu đồ.
@@ -49,7 +48,6 @@ const ChartSection = () => {
         enabled: false, // vô hiệu hóa tooltip do react-chartjs-2 cung cấp
         external: ({ tooltip }) => {
           // Khởi tạo một custom tooltip là một hàm nhận object tooltip làm tham số và trả về logic của tooltip
-          // console.log(tooltip);
           if (!chartRef || !chartRef.current) return;
 
           if (tooltip.opacity === 0) {
@@ -81,9 +79,7 @@ const ChartSection = () => {
               encodeId: Object.keys(chart?.items)[i],
             });
           }
-          // console.log(counters);
 
-          // console.log(+tooltip.body[0]?.lines[0]?.replace(".", ""));
           const rs = counters.find((i) =>
             i.data.some(
               (n) => n === +tooltip.body[0]?.lines[0]?.replace(".", "")
@@ -106,7 +102,6 @@ const ChartSection = () => {
       intersect: false, // chỉ định rằng tương tác hover sẽ chỉ kích hoạt khi trực tiếp trên một mục, thay vì giao nhau với mục đó.
     },
   };
-  // console.log(selected);
 
   // useEffect được thực thi khi state data chart trong redux store thay đổi (dùng cho việc hiển thị biểu đồ)
   useEffect(() => {

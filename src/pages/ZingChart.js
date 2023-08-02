@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
-import { apiGetChartHome } from "../../apis";
+import { apiGetChartHome } from "../apis";
 import { Line } from "react-chartjs-2";
 import { Chart } from "chart.js/auto";
-import bgChart from "../../assets/bg-chart.jpg";
-import { RankList, SongItem } from "../../components";
+import bgChart from "../assets/bg-chart.jpg";
+import { RankList, SongItem } from "../components";
 import _ from "lodash";
 
 const ZingChart = () => {

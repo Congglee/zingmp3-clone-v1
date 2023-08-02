@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 const { BsDot } = icons;
 
 const Lists = ({ totalDuration, isHideTime }) => {
-  // console.log({ songs, totalDuration });
   const { songs } = useSelector((state) => state.music);
 
   return (

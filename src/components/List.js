@@ -8,7 +8,6 @@ const { BsMusicNoteBeamed } = icons;
 
 const List = ({ songData, isHideAlbum, isHideNode, order }) => {
   const dispatch = useDispatch();
-  // console.log(songData);
   return (
     <div
       className="flex justify-between items-center p-[10px] border-t border-[rgba(0,0,0,0.05)] hover:bg-[#dde4e4] cursor-pointer"

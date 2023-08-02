@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { apiGetArtist } from "../../apis";
-import icons from "../../ultis/icons";
-import { Artist, Section, SongItem } from "../../components";
-import { useSelector } from "react-redux";
+import { apiGetArtist } from "../apis";
+import icons from "../ultis/icons";
+import { Artist, Section, SongItem } from "../components";
 
 const { AiOutlineUserAdd, BsFillPlayFill } = icons;
 
@@ -12,7 +11,6 @@ const Singer = () => {
   const [artistData, setArtistData] = useState(null);
   const [isHoverPlay, setIsHoverPlay] = useState(false);
   const ref = useRef();
-  // const { scrollTop } = useSelector((state) => state.app);
 
   useEffect(() => {
     const fetchArtistData = async () => {

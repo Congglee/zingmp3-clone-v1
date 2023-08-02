@@ -8,7 +8,6 @@ import { toast } from "react-toastify";
 import LoadingSong from "./LoadingSong";
 
 const {
-  AiFillHeart,
   AiOutlineHeart,
   BsThreeDots,
   MdSkipNext,
@@ -36,13 +35,11 @@ const Player = ({ setIsShowRightSideBar }) => {
   const [volume, setVolume] = useState(100); // Handle volume audio
   const [isHoverVolume, setIsHoverVolume] = useState(false);
   const dispatch = useDispatch();
-
-  // Lưu trữ một tham chiếu tới một đối tượng DOM bằng useRef hook
-  const thumbRef = useRef(); // thumbRef === <div ref={thumbRef} className="absolute top-0 left-0 h-[3px] rounded-l-full rounded-r-full bg-[#0e8080]"></div>
+  const thumbRef = useRef();
   const trackRef = useRef();
   const volumeRef = useRef();
 
-  // useEffect được thực thị khi curSongId thay đổi (gọi api để lấy ra thông tin bài hát và source của bài hát đó)
+  // Xử lý gọi api để lấy ra thông tin bài hát và source của bài hát đó
   useEffect(() => {
     const fetchDetailSong = async () => {
       setIsLoadedSource(false); // isLoadedSource === false khi việc gọi api đang chạy
@@ -59,12 +56,10 @@ const Player = ({ setIsShowRightSideBar }) => {
 
       // res2: link, file nhạc của bài hát
       if (res2.data.err === 0) {
-        // Dừng audio đang phát
-        audio.pause();
+        audio.pause(); // Dừng audio đang phát
 
-        // set cho audio hiện tại bằng source trong res2.data.data["128"]
-        // do api cung cấp trả về là đối tượng có key là 128 nên sẽ phải sử dụng bracket notation để truy cập
-        setAudio(new Audio(res2.data.data["128"]));
+        // Do api cung cấp trả về là đối tượng có key là 128 nên sẽ phải sử dụng bracket notation để truy cập
+        setAudio(new Audio(res2.data.data["128"])); // set cho audio hiện tại bằng source trong res2.data.data["128"]
       } else {
         audio.pause();
 
@@ -81,14 +76,11 @@ const Player = ({ setIsShowRightSideBar }) => {
     fetchDetailSong();
   }, [curSongId]);
 
-  // useEffect được thực thi khi audio bị thay đổi (dùng cho việc load source audio để phát nhạc mỗi khi audio bị thay đổi, làm cho thanh progress bar thumbRef và số giây chạy theo thời lượng bài hát đang phát)
+  // Xử lý việc load source audio để phát nhạc mỗi khi audio bị thay đổi, làm cho thanh progress bar thumbRef và số giây chạy theo thời lượng bài hát đang phát
   useEffect(() => {
-    // Nếu intervalId có tồn tại sau mỗi lần audio thay đổi thì sẽ xóa đi
     intervalId && clearInterval(intervalId);
-
     audio.pause();
-    // Load source audio
-    curSeconds === 0 && audio.load();
+    curSeconds === 0 && audio.load(); // Load source audio
 
     // Nếu isPlaying là true chạy audio hiện tại
     if (audio.src && isPlaying && thumbRef.current) {
@@ -96,20 +88,16 @@ const Player = ({ setIsShowRightSideBar }) => {
 
       // gán intervalId bằng setInterval cho chạy một lần mỗi 0.2s
       intervalId = setInterval(() => {
-        // console.log(audio.currentTime);
-
         // Mỗi lần chạy thì tính số phần trăm percent để lấy ra giá trị của thuộc tính right trong CSS làm cho thanh progress bar thumbRef chạy
         let percent =
           Math.round((audio.currentTime * 10000) / songInfo.duration) / 100;
         thumbRef.current.style.cssText = `right: ${100 - percent}%`;
-
-        // Đặt lại thời gian hiện tại bằng audio.currentTime
-        setCurSeconds(Math.round(audio.currentTime));
+        setCurSeconds(Math.round(audio.currentTime)); // Đặt lại thời gian hiện tại bằng audio.currentTime
       }, 200);
     }
   }, [audio, isPlaying]);
 
-  // useEffect được thực thi khi audio, isShuffle, repeatMode bị thay đổi (dùng cho việc phát nhạc khi người dùng click vào một trong hai button shuffle, repeat hoặc cả hai)
+  // Xử lý việc phát nhạc khi người dùng click vào một trong hai button shuffle, repeat hoặc cả hai
   useEffect(() => {
     const handleEnded = () => {
       // Nếu isShuffle là true
@@ -124,16 +112,14 @@ const Player = ({ setIsShowRightSideBar }) => {
         dispatch(actions.play(false));
       }
     };
-    // Thêm sự kiện ended cho audio, chỉ khi audio kết thúc mới thực thi hàm handleEnded
-    audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("ended", handleEnded); // Thêm sự kiện ended cho audio, chỉ khi audio kết thúc mới thực thi hàm handleEnded
 
-    // Loại bỏ sự kiện ended khi người dùng tắt hoặc out website
     return () => {
-      audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("ended", handleEnded); // Loại bỏ sự kiện ended khi người dùng tắt hoặc out website
     };
   }, [audio, isShuffle, repeatMode]);
 
-  // useEffect được thực thị khi volume bị thay đổi (dùng cho việc điều chỉnh volume của audio)
+  //Xử lý việc điều chỉnh volume của audio
   useEffect(() => {
     // audio.volume = 0 -> 1
     audio.volume = volume / 100;
@@ -149,55 +135,35 @@ const Player = ({ setIsShowRightSideBar }) => {
   const handleTogglePlayMusic = () => {
     // Nếu audio bài hát là true (đang phát) mà người dùng click vào
     if (isPlaying) {
-      // Dừng audio lại
-      audio.pause();
-
-      // Đổi icon toggle play music
-      dispatch(actions.play(false));
-    } else {
+      audio.pause(); // Dừng audio lại
+      dispatch(actions.play(false)); // Đổi icon toggle play music
+    } else if (audio.src) {
       // Nếu audio bài hát là false (đang dừng) mà người dùng click vào
-
-      // Chạy audio bài hát
-      audio.play();
-
-      // Đổi icon toggle play music
-      dispatch(actions.play(true));
+      audio.play(); // Chạy audio bài hát
+      dispatch(actions.play(true)); // Đổi icon toggle play music
     }
   };
 
   // Xử lý việc click vào thanh progress bar (tua bài hát)
   const handleClickProgressbar = (e) => {
-    // console.log(e);
-    // console.log(trackRef);
-
     const trackRect = trackRef.current.getBoundingClientRect(); // Lấy ra tọa độ của phần tử DOM mà trackRef tham chiếu tới
-
-    // Tính ra số phần trăm khi người dùng click progressbar
     const percent =
       Math.round(((e.clientX - trackRect.left) * 10000) / trackRect.width) /
-      100;
-
-    // Set lại thumbRef (progressbar màu xanh)
-    thumbRef.current.style.cssText = `right: ${100 - percent}%`;
-
-    // Set lại thời gian hiện tại của audio
-    audio.currentTime = (percent * songInfo.duration) / 100;
-
-    // Set lại thời gian của thanh progressbar
-    setCurSeconds(Math.round((percent * songInfo.duration) / 100));
+      100; // Tính ra số phần trăm khi người dùng click progressbar
+    thumbRef.current.style.cssText = `right: ${100 - percent}%`; // Set lại thumbRef (progressbar màu xanh)
+    audio.currentTime = (percent * songInfo.duration) / 100; // Set lại thời gian hiện tại của audio
+    setCurSeconds(Math.round((percent * songInfo.duration) / 100)); // Set lại thời gian của thanh progressbar
   };
 
   // Xử lý người dùng click vào button next song
   const handleNextSong = () => {
-    // Nếu songs được lấy ra từ redux store tồn tại === true
     if (songs) {
       let currentSongIndex; // index của current song
       songs?.forEach((item, index) => {
-        // Nếu encodeId của encodeId của các bài hát trong songs === với id của bài hát hiện tại => currentSongIndex = index
-        if (item.encodeId === curSongId) currentSongIndex = index;
+        if (item.encodeId === curSongId) currentSongIndex = index; // Nếu encodeId của encodeId của các bài hát trong songs === với id của bài hát hiện tại => currentSongIndex = index
       });
-      // Gửi 1 actions đến redux reducer id của bài hát hiện tại có index + 1 (bài hát nằm kế tiếp bài hát hiện tại)
-      dispatch(actions.setCurSongId(songs[currentSongIndex + 1].encodeId));
+
+      dispatch(actions.setCurSongId(songs[currentSongIndex + 1].encodeId)); // Dispatch 1 actions đến redux reducer id của bài hát hiện tại có index + 1 (bài hát nằm kế tiếp bài hát hiện tại)
       dispatch(actions.play(true));
     }
   };
@@ -278,7 +244,6 @@ const Player = ({ setIsShowRightSideBar }) => {
             className="p-1 border cursor-pointer border-gray-700 hover:text-main-500 rounded-full"
             onClick={handleTogglePlayMusic}
           >
-            {/* Nếu isLoadedSoruce có giá trị là false sẽ khởi chạy component LoadingSong */}
             {!isLoadedSource ? (
               <LoadingSong />
             ) : isPlaying ? (

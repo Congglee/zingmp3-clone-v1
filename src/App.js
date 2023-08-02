@@ -2,8 +2,6 @@ import {
   Album,
   Home,
   Login,
-  Personal,
-  Public,
   WeekRank,
   ZingChart,
   Search,
@@ -11,7 +9,7 @@ import {
   SearchAll,
   Singer,
   SearchPlaylist,
-} from "./containers/public";
+} from "./pages";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Routes, Route } from "react-router-dom";
@@ -20,15 +18,13 @@ import { useEffect, useState } from "react";
 import * as actions from "./store/actions";
 import { useDispatch } from "react-redux";
 import { apiGetChartHome } from "./apis";
+import Public from "./layouts/Public";
 
 function App() {
-  // useDispatch hook là một hàm được cung cấp bởi thư viện react-redux trả về một tham chiếu đến hàm dispatch từ Redux store. Có thể sử dụng hook này để gửi các action từ các component React của mình mà không cần phải chuyển hàm dispatch dưới dạng prop.
-  // Sử dụng useDispatch hook để gán làm hàm dispatch
   const dispatch = useDispatch();
   const [weekChart, setWeekChart] = useState(null);
   const [currentWidth, setCurrentWidth] = useState(window.innerWidth);
 
-  // useEffect được sử dụng để gửi action getHome khi component được gắn kết (component mounts)
   useEffect(() => {
     dispatch(actions.getHome());
     const fetchChartData = async () => {
@@ -60,8 +56,9 @@ function App() {
         <Routes>
           <Route path={path.PUBLIC} element={<Public />}>
             <Route path={path.HOME} element={<Home />} />
+            <Route path={path.MY_MUSIC} element={<Home />} />
+            <Route path={path.FOLLOW} element={<Home />} />
             <Route path={path.LOGIN} element={<Login />} />
-            <Route path={path.MY_MUSIC} element={<Personal />} />
             <Route path={path.ALBUM__TITLE__PID} element={<Album />} />
             <Route path={path.PLAYLIST__TITLE__PID} element={<Album />} />
             <Route
