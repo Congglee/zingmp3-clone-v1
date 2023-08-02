@@ -103,7 +103,7 @@ const Slider = () => {
       if (isAuto) {
         intervalId = setInterval(() => {
           handleAnimationBanner(1);
-          console.log(handleAnimationBanner(1));
+          // console.log(handleAnimationBanner(1));
           // initialRender = false; // Update initialRender flag after the first iteration
         }, 4000);
       }

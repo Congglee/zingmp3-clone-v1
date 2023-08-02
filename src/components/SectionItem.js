@@ -38,7 +38,7 @@ const SectionItem = ({
         // kèm thêm một option khi chuyển trang là thêm một object có thuộc tính playAlbum value false vào object state (không click vào button play khi hover vào playlist)
         navigate(link?.split(".")[0], { state: { playAlbum: false } });
       }}
-      className="flex flex-col gap-3 justify-evenly w-1/5 p-4 text-sm cursor-pointer"
+      className="flex flex-col gap-3 justify-evenly flex-1 p-4 text-sm cursor-pointer"
     >
       <div
         onMouseEnter={handleHover}

@@ -26,6 +26,7 @@ function App() {
   // Sử dụng useDispatch hook để gán làm hàm dispatch
   const dispatch = useDispatch();
   const [weekChart, setWeekChart] = useState(null);
+  const [currentWidth, setCurrentWidth] = useState(window.innerWidth);
 
   // useEffect được sử dụng để gửi action getHome khi component được gắn kết (component mounts)
   useEffect(() => {
@@ -37,6 +38,21 @@ function App() {
 
     fetchChartData();
   }, []);
+
+  const setWidth = (e) => {
+    setCurrentWidth(e.target.innerWidth);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", setWidth);
+    return () => {
+      window.removeEventListener("resize", setWidth);
+    };
+  }, []);
+
+  useEffect(() => {
+    dispatch(actions.setCurrentWidth(currentWidth));
+  }, [currentWidth]);
 
   return (
     <>

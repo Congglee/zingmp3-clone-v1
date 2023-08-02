@@ -13,6 +13,8 @@ const actionTypes = {
   PLAYLIST: "PLAYLIST",
   SEARCH: "SEARCH",
   ZERO_SCROLLTOP: "ZERO_SCROLLTOP",
+
+  CURRENT_WIDTH: "CURRENT_WIDTH",
 };
 
 export default actionTypes;

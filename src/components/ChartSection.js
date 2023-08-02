@@ -143,7 +143,7 @@ const ChartSection = () => {
   }, [chart]);
 
   return (
-    <div className="px-[59px] mt-12 relative max-h-[430px] rounded-md">
+    <div className="px-[59px] mt-12 relative min-[1324px]:max-h-[430px] h-[760px] rounded-md">
       <img
         src={bgChart}
         alt="bg-chart"
@@ -160,7 +160,7 @@ const ChartSection = () => {
             <BsFillPlayFill size={18} color="green" />
           </span>
         </Link>
-        <div className="flex gap-4 h-full">
+        <div className="min-[1324px]:flex-row flex flex-col gap-4 h-full">
           <div className="flex-3 flex flex-col gap-4">
             {rank
               ?.filter((i, index) => index < 3)
@@ -183,7 +183,7 @@ const ChartSection = () => {
               Xem thêm
             </Link>
           </div>
-          <div className="flex-7 h-[90%] relative">
+          <div className="flex-7 order-first min-[1324px]:order-last min-[1324px]:w-[500px] h-[80%] relative">
             {data && <Line data={data} ref={chartRef} options={options} />}
             <div
               className="tooltip"

@@ -18,6 +18,7 @@ const initState = {
   rank: [],
   singers: null,
   scrollTop: true, // state lưu giá trị ẩn hiện thanh header khi lăn chuột
+  currentWidth: null,
 };
 
 // Định nghĩa một hàm reducer được gọi là appReducer.
@@ -89,6 +90,12 @@ const appReducer = (state = initState, action) => {
       return {
         ...state,
         scrollTop: action.flag,
+      };
+
+    case actionTypes.CURRENT_WIDTH:
+      return {
+        ...state,
+        currentWidth: action.w,
       };
 
     default:

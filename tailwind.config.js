@@ -130,7 +130,7 @@ module.exports = {
       },
     },
     screens: {
-      1520: "1520px",
+      1400: "1400px",
     },
   },
   plugins: [],
