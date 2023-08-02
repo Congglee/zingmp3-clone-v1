@@ -34,11 +34,13 @@ const Player = ({ setIsShowRightSideBar }) => {
   const [repeatMode, setRepeatMode] = useState(0); // Lưu trữ giá trị để handle việc bật tắt button repeat
   const [isLoadedSource, setIsLoadedSource] = useState(true); // Lưu trữ giá trị để handle hiển thị loading icon khi source đang nạp
   const [volume, setVolume] = useState(100); // Handle volume audio
+  const [isHoverVolume, setIsHoverVolume] = useState(false);
   const dispatch = useDispatch();
 
   // Lưu trữ một tham chiếu tới một đối tượng DOM bằng useRef hook
   const thumbRef = useRef(); // thumbRef === <div ref={thumbRef} className="absolute top-0 left-0 h-[3px] rounded-l-full rounded-r-full bg-[#0e8080]"></div>
   const trackRef = useRef();
+  const volumeRef = useRef();
 
   // useEffect được thực thị khi curSongId thay đổi (gọi api để lấy ra thông tin bài hát và source của bài hát đó)
   useEffect(() => {
@@ -135,6 +137,12 @@ const Player = ({ setIsShowRightSideBar }) => {
   useEffect(() => {
     // audio.volume = 0 -> 1
     audio.volume = volume / 100;
+  }, [volume]);
+
+  useEffect(() => {
+    if (volumeRef.current) {
+      volumeRef.current.style.cssText = `right: ${100 - volume}%`;
+    }
   }, [volume]);
 
   // Xử lý button play music
@@ -314,8 +322,12 @@ const Player = ({ setIsShowRightSideBar }) => {
         </div>
       </div>
 
-      <div className="w-[30%] flex-auto flex items-center justify-end gap-4 ">
-        <div className="flex gap-2 items-center">
+      <div className="w-[30%] hidden flex-auto min-[840px]:flex items-center justify-end gap-4 ">
+        <div
+          className="flex gap-2 items-center"
+          onMouseEnter={() => setIsHoverVolume(true)}
+          onMouseLeave={() => setIsHoverVolume(false)}
+        >
           <span onClick={() => setVolume((prev) => (+prev === 0 ? 70 : 0))}>
             {+volume >= 50 ? (
               <SlVolume2 />
@@ -325,6 +337,17 @@ const Player = ({ setIsShowRightSideBar }) => {
               <SlVolume1 />
             )}
           </span>
+
+          <div
+            className={`w-[130px] h-1 bg-white rounded-l-full rounded-r-full ${
+              isHoverVolume ? "hidden" : "relative"
+            }`}
+          >
+            <div
+              ref={volumeRef}
+              className="absolute left-0 bottom-0 top-0 bg-main-500 rounded-l-full rounded-r-full"
+            ></div>
+          </div>
           <input
             type="range"
             step={1}
@@ -332,6 +355,7 @@ const Player = ({ setIsShowRightSideBar }) => {
             max={100}
             value={volume}
             onChange={(e) => setVolume(e.target.value)}
+            className={`w-[130px] ${isHoverVolume ? "inline" : "hidden"}`}
           />
         </div>
         <span
