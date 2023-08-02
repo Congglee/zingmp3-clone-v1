@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import {
   Player,
   SidebarLeft,
@@ -14,6 +14,7 @@ import * as actions from "../../store/actions";
 const Public = () => {
   const [isShowRightSideBar, setIsShowRightSideBar] = useState(true); // Lưu trữ giá trị handle việc ẩn hiện right sidebar
   const { isLoading, scrollTop } = useSelector((state) => state.app);
+  const { curSongId } = useSelector((state) => state.music);
   const dispatch = useDispatch();
 
   const handleScrollTop = (e) => {
@@ -66,9 +67,11 @@ const Public = () => {
         )}
       </div>
 
-      <div className="fixed z-50 bottom-0 left-0 right-0 h-[90px]">
-        <Player setIsShowRightSideBar={setIsShowRightSideBar} />
-      </div>
+      {curSongId && (
+        <div className="fixed z-50 bottom-0 left-0 right-0 h-[90px]">
+          <Player setIsShowRightSideBar={setIsShowRightSideBar} />
+        </div>
+      )}
     </div>
   );
 };
